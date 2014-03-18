@@ -10,7 +10,7 @@
 		% id_stack.append(e.name)
 	% end
 	% substeps = getattr(e, 'substeps', [])
-	<div class="media panel" id="{{ '-'.join(id_stack) }}">
+	<div class="media" id="{{ '-'.join(id_stack) }}">
 		% thumb_path = e.thumbnail.as_posix() if e.thumbnail else ''
 		% full_path = e.large_image.as_posix() if e.large_image else ''
 
