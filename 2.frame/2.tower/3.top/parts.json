@@ -1,1 +1,1 @@
-{"rod": {"blue": "36", "orange": "24", "yellow": "8", "white": "10", "red": "48", "green": "8", "Gray": "8"}, "other": {"joint": "2"}, "connector": {"blue": "17", "yellow": "14", "white": "1", "purple": "43", "gray": "1", "orange": "30"}}
+{"rod": {"yellow": 8, "red": 48, "green": 8, "orange": 24, "blue": 36, "white": 10, "Gray": 8}, "other": {"joint": 2}, "connector": {"yellow": 14, "orange": 30, "blue": 17, "white": 1, "purple": 43, "gray": 1}}
