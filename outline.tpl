@@ -390,7 +390,10 @@ rod_ids.update({
 			}
 			.jumbotron.main .container {
 				color: white;
-				text-shadow: 0px 0px 5px black;
+				text-shadow:  1px  1px 1px black,
+				             -1px  1px 1px black,
+				              1px -1px 1px black,
+				             -1px -1px 1px black;
 			}
 			.all-parts .part-list {
 				text-align: left;
