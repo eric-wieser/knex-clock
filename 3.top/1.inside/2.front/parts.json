@@ -1,1 +1,1 @@
-{"rod": {"yellow": 14, "red": 4, "green": 58, "orange": 6, "blue": 63, "white": 14}, "other": {"joint": 2, "Washer": 3, "small hub": 1}, "connector": {"yellow": 14, "green": 13, "orange": 4, "blue": 48, "white": 3, "purple": 36}}
+{"other": {"joint": 2, "small hub": 1, "washer": 3}, "rod": {"green": 58, "white": 14, "orange": 6, "yellow": 14, "red": 4, "blue": 63}, "connector": {"green": 13, "white": 3, "orange": 4, "yellow": 14, "purple": 36, "blue": 48}}

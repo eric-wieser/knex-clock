@@ -34,7 +34,7 @@ for r in transposed:
 	part_dict = defaultdict(dict)
 	for h, c in zip(headings, part_list):
 		if c:
-			part_dict[h[0]][h[1]] = int(c)
+			part_dict[h[0]][h[1].lower()] = int(c)
 
 	transposed_dict[section] = dict(part_dict)
 
