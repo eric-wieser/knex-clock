@@ -403,16 +403,14 @@ rod_ids.update({
 				text-align: right;
 				width: 75px;
 			}
-			/*.all-parts {
-				background: #e0e0e0;
-				margin-top: -30px;
-				margin-bottom: 30px;
-				padding-top: 30px;
-				padding-bottom: 20px;
-			}*/
+			.footer {
+				padding-top: 10px;
+				background: #eee;
+				text-align: center;
+			}
 		</style>
 
-		<title>Test</title>
+		<title>Knex grandfather clock</title>
 	</head>
 	<body data-spy="scroll">
 		<div class="jumbotron main">
@@ -459,6 +457,14 @@ rod_ids.update({
 						</div>
 					</div>
 				</div>
+			</div>
+		</div>
+		<div class="footer">
+			<div class="container">
+				<p>
+					Based off <a href="http://www.balmoralsoftware.com/knex/gclock01.htm">A design by Balmoral Software</a>.
+					Built and documented by <a href="http://eric-wieser.tk">Eric Wieser</a>
+				</p>
 			</div>
 		</div>
 	</body>
