@@ -79,7 +79,7 @@ def iter_order(d, keys):
 			yield k, d[k]
 		end
 	end
-	for k in d.keys():
+	for k in sorted(d.keys()):
 		if k not in keys:
 			yield k, d[k]
 		end
@@ -88,6 +88,10 @@ end
 
 rod_order = ['green', 'white', 'blue', 'yellow', 'red', 'gray']
 connector_order = ['tan', 'gray', 'orange', 'lt. gray', 'red', 'green', 'yellow', 'blue', 'white', 'purple']
+other_order = [
+	'blue gear', 'red gear', 'yellow gear',
+	'small hub', 'medium hub', 'small tyre', 'medium tyre'
+]
 
 
 other_ids = {
@@ -155,7 +159,7 @@ rod_ids.update({
 			% end
 		</p>
 		<p>
-			% for part, count in iter_order(e.parts.get('other', {}), []):
+			% for part, count in iter_order(e.parts.get('other', {}), other_order):
 				<span class="part">
 				% part = part.lower()
 				% if part in other_ids:
@@ -356,19 +360,19 @@ rod_ids.update({
 				background-position: top right;
 				vertical-align: middle;
 			}
-			% for rod, i in rod_ids.items():
+			% for rod, i in sorted(rod_ids.items()):
 			.knex-icon.rod-{{re.sub(r'\W', '', rod)}} {
 				background-image: url(pieces/{{ i }}.gif);
 				text-indent: -9999px;
 			}
 			% end
-			% for connector, i in connector_ids.items():
+			% for connector, i in sorted(connector_ids.items()):
 			.knex-icon.connector-{{re.sub(r'\W', '', connector)}} {
 				background-image: url(pieces/{{ i }}.gif);
 				text-indent: -9999px;
 			}
 			% end
-			% for other, i in other_ids.items():
+			% for other, i in sorted(other_ids.items()):
 			.knex-icon.other-{{re.sub(r'\W', '', other)}} {
 				background-image: url(pieces/{{ i }}.gif);
 				text-indent: -9999px;
@@ -463,7 +467,8 @@ rod_ids.update({
 			<div class="container">
 				<p>
 					Based off <a href="http://www.balmoralsoftware.com/knex/gclock01.htm">A design by Balmoral Software</a>.
-					Built and documented by <a href="http://eric-wieser.tk">Eric Wieser</a>
+					Built and documented by <a href="http://eric-wieser.tk">Eric Wieser</a>.
+					Dismantled in 2008
 				</p>
 			</div>
 		</div>
