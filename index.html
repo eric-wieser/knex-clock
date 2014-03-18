@@ -3,6 +3,8 @@
 
 
 
+
+
 <!doctype html>
 <html>
 	<head>
@@ -13,12 +15,161 @@
 
 		<link href="http://netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css" rel="stylesheet">
 		<script src="http://netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
+		<script>
+		ScrollSpy = $.fn.scrollspy.Constructor;
 
+		var old = ScrollSpy.prototype.activate;
+		ScrollSpy.prototype.activate = function(direct_target) {
+			this.$element.trigger({ type: 'focused.bs.scrollspy', href: direct_target });
+			return old.call(this, direct_target);
+		}
+
+		$(function() {
+			$(window).scrollspy({target: ".the-sidebar", offset: 75 }).on('focused.bs.scrollspy', function(e) {
+				var matching = $('.part-lists > div').removeClass('active').filter(function() {
+					return $(this).data('partsfor') == e.href;
+				});
+				console.log(matching, e.href);
+				matching.addClass('active');
+			});
+
+
+			var jumboHeight = $('.jumbotron').outerHeight();
+			function parallax(){
+				var scrolled = $(window).scrollTop();
+				$('.jumbotron').css('background-position-y', (scrolled / jumboHeight * 100) + '%');
+			}
+
+			$(window).scroll(function(e){
+				parallax();
+			});
+
+			$(".the-sidebar").affix({
+				offset: {
+					top: function() {
+						return $(".the-sidebar").parent().offset().top - 20;
+					},
+					bottom: 10
+				}
+			});
+			var onResize;
+			$(window).on('resize', onResize = function() {
+				$(".the-sidebar").css('width', $(".the-sidebar").parent().width() + 'px')
+			});
+			$(window).on('load', function() {
+				$(window).scrollspy("refresh");
+				onResize();
+			});
+		})
+		</script>
 		<style>
 
-			.parts-panel {
-				width: 250px;
+			.the-sidebar.affix {
+				position: static
 			}
+
+
+			.the-sidenav {
+				margin-top: 20px;
+				margin-bottom: 20px
+			}
+
+			.the-sidebar .nav>li>a {
+				display: block;
+				font-size: 13px;
+				font-weight: 500;
+				color: #999;
+				padding: 4px 20px;
+			}
+
+			.the-sidebar .nav>li>a:hover,.the-sidebar .nav>li>a:focus {
+				padding-left: 19px;
+				color: #563d7c;
+				text-decoration: none;
+				background-color: transparent;
+				border-left: 1px solid #563d7c
+			}
+
+			.the-sidebar .nav>.active>a,.the-sidebar .nav>.active:hover>a,.the-sidebar .nav>.active:focus>a {
+				padding-left: 18px;
+				font-weight: 700;
+				color: #563d7c;
+				background-color: transparent;
+				border-left: 2px solid #563d7c
+			}
+
+			.the-sidebar .nav .nav {
+				display: none;
+				padding-bottom: 10px
+			}
+
+			.the-sidebar .nav .nav>li>a {
+				padding-top: 1px;
+				padding-bottom: 1px;
+				padding-left: 30px;
+				font-size: 12px;
+				font-weight: 400
+			}
+
+			.the-sidebar .nav .nav>li>a:hover,.the-sidebar .nav .nav>li>a:focus {
+				padding-left: 29px
+			}
+
+			.the-sidebar .nav .nav>.active>a,.the-sidebar .nav .nav>.active:hover>a,.the-sidebar .nav .nav>.active:focus>a {
+				font-weight: 500;
+				padding-left: 28px
+			}
+
+			.the-sidebar .nav .nav .nav>li>a {
+				padding-left: 40px;
+			}
+			.the-sidebar .nav .nav .nav>li>a:hover,.the-sidebar .nav .nav .nav>li>a:focus {
+				padding-left: 39px
+			}
+
+			.the-sidebar .nav .nav .nav>.active>a,.the-sidebar .nav .nav .nav>.active:hover>a,.the-sidebar .nav .nav .nav>.active:focus>a {
+				padding-left: 38px
+			}
+
+			.part-list { text-align: right; }
+			.part-lists .part-list {
+				display: none;
+			}
+			.part-lists .active .part-list {
+				display: block;
+			}
+
+			@media (min-width:992px) {
+				.the-sidebar .nav>.active>ul {
+					display: block
+				}
+
+				.the-sidebar.affix,.the-sidebar.affix-bottom {
+					width: 213px
+				}
+
+				.the-sidebar.affix {
+					position: fixed;
+					top: 20px;
+					bottom: 20px;
+				}
+
+				.the-sidebar.affix-bottom {
+					position: absolute
+				}
+
+				.the-sidebar.affix-bottom .the-sidenav,.the-sidebar.affix .the-sidenav {
+					margin-top: 0;
+					margin-bottom: 0
+				}
+			}
+
+			@media (min-width:1200px) {
+				.the-sidebar.affix-bottom,.the-sidebar.affix {
+					width: 263px
+				}
+			}
+
 
 			.knex-icon {
 				display: inline-block;
@@ -33,8 +184,24 @@
 				background-image: url(pieces/90953.gif);
 				text-indent: -9999px;
 			}
+			.knex-icon.rod-whiteblack {
+				background-image: url(pieces/90961.gif);
+				text-indent: -9999px;
+			}
+			.knex-icon.rod-green {
+				background-image: url(pieces/90950.gif);
+				text-indent: -9999px;
+			}
 			.knex-icon.rod-red {
 				background-image: url(pieces/90954.gif);
+				text-indent: -9999px;
+			}
+			.knex-icon.rod-grayblack {
+				background-image: url(pieces/919561.gif);
+				text-indent: -9999px;
+			}
+			.knex-icon.rod-redtan {
+				background-image: url(pieces/90957.gif);
 				text-indent: -9999px;
 			}
 			.knex-icon.rod-orange {
@@ -45,24 +212,8 @@
 				background-image: url(pieces/90952.gif);
 				text-indent: -9999px;
 			}
-			.knex-icon.rod-redtan {
-				background-image: url(pieces/90957.gif);
-				text-indent: -9999px;
-			}
-			.knex-icon.rod-green {
-				background-image: url(pieces/90950.gif);
-				text-indent: -9999px;
-			}
-			.knex-icon.rod-grayblack {
-				background-image: url(pieces/919561.gif);
-				text-indent: -9999px;
-			}
 			.knex-icon.rod-gray {
 				background-image: url(pieces/90955.gif);
-				text-indent: -9999px;
-			}
-			.knex-icon.rod-whiteblack {
-				background-image: url(pieces/90961.gif);
 				text-indent: -9999px;
 			}
 			.knex-icon.rod-white {
@@ -73,52 +224,56 @@
 				background-image: url(pieces/90906.gif);
 				text-indent: -9999px;
 			}
-			.knex-icon.connector-red {
-				background-image: url(pieces/90904.gif);
-				text-indent: -9999px;
-			}
-			.knex-icon.connector-orange {
-				background-image: url(pieces/90902.gif);
-				text-indent: -9999px;
-			}
-			.knex-icon.connector-ltgray {
-				background-image: url(pieces/90903.gif);
+			.knex-icon.connector-tan {
+				background-image: url(pieces/90900.gif);
 				text-indent: -9999px;
 			}
 			.knex-icon.connector-green {
 				background-image: url(pieces/90905.gif);
 				text-indent: -9999px;
 			}
-			.knex-icon.connector-blue {
-				background-image: url(pieces/90907.gif);
-				text-indent: -9999px;
-			}
-			.knex-icon.connector-tan {
-				background-image: url(pieces/90900.gif);
-				text-indent: -9999px;
-			}
-			.knex-icon.connector-gray {
-				background-image: url(pieces/90901.gif);
-				text-indent: -9999px;
-			}
-			.knex-icon.connector-purple {
-				background-image: url(pieces/90909.gif);
+			.knex-icon.connector-red {
+				background-image: url(pieces/90904.gif);
 				text-indent: -9999px;
 			}
 			.knex-icon.connector-white {
 				background-image: url(pieces/90908.gif);
 				text-indent: -9999px;
 			}
+			.knex-icon.connector-purple {
+				background-image: url(pieces/90909.gif);
+				text-indent: -9999px;
+			}
 			.knex-icon.connector-bluemetallic {
 				background-image: url(pieces/91907.gif);
 				text-indent: -9999px;
 			}
-			.knex-icon.other-mediumhub {
-				background-image: url(pieces/90979.gif);
+			.knex-icon.connector-orange {
+				background-image: url(pieces/90902.gif);
 				text-indent: -9999px;
 			}
-			.knex-icon.other-yellowgear {
-				background-image: url(pieces/90998.gif);
+			.knex-icon.connector-gray {
+				background-image: url(pieces/90901.gif);
+				text-indent: -9999px;
+			}
+			.knex-icon.connector-ltgray {
+				background-image: url(pieces/90903.gif);
+				text-indent: -9999px;
+			}
+			.knex-icon.connector-blue {
+				background-image: url(pieces/90907.gif);
+				text-indent: -9999px;
+			}
+			.knex-icon.other-chain {
+				background-image: url(pieces/90987.gif);
+				text-indent: -9999px;
+			}
+			.knex-icon.other-washer {
+				background-image: url(pieces/90994.gif);
+				text-indent: -9999px;
+			}
+			.knex-icon.other-mediumhub {
+				background-image: url(pieces/90979.gif);
 				text-indent: -9999px;
 			}
 			.knex-icon.other-smalltyre {
@@ -129,111 +284,253 @@
 				background-image: url(pieces/513130.gif);
 				text-indent: -9999px;
 			}
-			.knex-icon.other-chain {
-				background-image: url(pieces/90987.gif);
-				text-indent: -9999px;
-			}
-			.knex-icon.other-smallhub {
-				background-image: url(pieces/90978.gif);
-				text-indent: -9999px;
-			}
 			.knex-icon.other-redgear {
 				background-image: url(pieces/90985.gif);
-				text-indent: -9999px;
-			}
-			.knex-icon.other-mediumtyre {
-				background-image: url(pieces/91976.gif);
-				text-indent: -9999px;
-			}
-			.knex-icon.other-washer {
-				background-image: url(pieces/90994.gif);
 				text-indent: -9999px;
 			}
 			.knex-icon.other-joint {
 				background-image: url(pieces/90913.gif);
 				text-indent: -9999px;
 			}
+			.knex-icon.other-yellowgear {
+				background-image: url(pieces/90998.gif);
+				text-indent: -9999px;
+			}
+			.knex-icon.other-smallhub {
+				background-image: url(pieces/90978.gif);
+				text-indent: -9999px;
+			}
+			.knex-icon.other-mediumtyre {
+				background-image: url(pieces/91976.gif);
+				text-indent: -9999px;
+			}
+
+			.part {
+				display: block;
+			}
+
+			.jumbotron.main {
+				background-image: url(9.medium.jpg);
+				background-position: top;
+				background-size: cover;
+				height: 100%;
+				height: 100vh;
+				position: relative;
+				margin-bottom: 0;
+			}
+			.jumbotron.main .container {
+				color: white;
+				text-shadow: 0px 0px 5px black;
+			}
+			.all-parts .part-list {
+				text-align: left;
+			}
+			.all-parts .part-list .part {
+				display: inline-block;
+				text-align: right;
+				width: 75px;
+			}
+			/*.all-parts {
+				background: #e0e0e0;
+				margin-top: -30px;
+				margin-bottom: 30px;
+				padding-top: 30px;
+				padding-bottom: 20px;
+			}*/
 		</style>
 
 		<title>Test</title>
 	</head>
 	<body data-spy="scroll">
-		<div class="container">
-	<div class="media">
-		<a class="pull-left" >
-			<div class="media-object" style="width: 64px; height: 64px; background: gray url(9.thumb.jpg) center; background-size: cover"></div>
-		</a>
-		<div class="media-body">
-			<h4 class="media-heading">Clock</h4>
-
-	<div class="media">
-		<a class="pull-left" >
-			<div class="media-object" style="width: 64px; height: 64px; background: gray url(1.spiral/3.thumb.jpg) center; background-size: cover"></div>
-		</a>
-		<div class="media-body">
-	<section class="panel panel-default pull-right parts-panel">
-		<div class="panel-body" style="white-space: nowrap">
-			<div class="row">
-				<div class="col-md-4" style="text-align: right; padding: 0 5px">
-							137
-							<span class="knex-icon rod-yellow" title="yellow"></span>
-						<br />
-							136
-							<span class="knex-icon rod-red" title="red"></span>
-						<br />
-							5
-							<span class="knex-icon rod-gray" title="gray"></span>
-						<br />
-				</div>
-				<div class="col-md-4" style="text-align: right; padding: 0 5px">
-							5
-							<span class="knex-icon connector-tan" title="tan"></span>
-						<br />
-							31
-							<span class="knex-icon connector-gray" title="gray"></span>
-						<br />
-							2
-							<span class="knex-icon connector-ltgray" title="lt. gray"></span>
-						<br />
-							73
-							<span class="knex-icon connector-red" title="red"></span>
-						<br />
-							67
-							<span class="knex-icon connector-yellow" title="yellow"></span>
-						<br />
-				</div>
-				<div class="col-md-4" style="text-align: right; padding: 0 5px">
+		<div class="jumbotron main">
+			<div style="position: absolute; bottom: 0">
+				<div class="container">
+					<h1>Knex grandfather clock</h1>
+					<p>A clockwork model capable of keeping time for around 45 minutes</p>
 				</div>
 			</div>
+		</div>
+		<div class="jumbotron all-parts">
+			<div class="container">
+	<div class="part-list">
+		<p>
+				<span class="part">
+					805
+					<span class="knex-icon rod-green" title="green"></span>
+				</span>
+				<span class="part">
+					245
+					<span class="knex-icon rod-white" title="white"></span>
+				</span>
+				<span class="part">
+					567
+					<span class="knex-icon rod-blue" title="blue"></span>
+				</span>
+				<span class="part">
+					401
+					<span class="knex-icon rod-yellow" title="yellow"></span>
+				</span>
+				<span class="part">
+					422
+					<span class="knex-icon rod-red" title="red"></span>
+				</span>
+				<span class="part">
+					63
+					<span class="knex-icon rod-gray" title="gray"></span>
+				</span>
+				<span class="part">
+					124
+					<span class="knex-icon rod-orange" title="orange"></span>
+				</span>
+				<span class="part">
+					5
+					<span class="knex-icon rod-grayblack" title="gray (black)"></span>
+				</span>
+				<span class="part">
+					1
+					<span class="knex-icon rod-whiteblack" title="white (black)"></span>
+				</span>
+				<span class="part">
+					3
+					<span class="knex-icon rod-redtan" title="red (tan)"></span>
+				</span>
+		</p>
+		<p>
+				<span class="part">
+					65
+					<span class="knex-icon connector-tan" title="tan"></span>
+				</span>
+				<span class="part">
+					109
+					<span class="knex-icon connector-gray" title="gray"></span>
+				</span>
+				<span class="part">
+					143
+					<span class="knex-icon connector-orange" title="orange"></span>
+				</span>
+				<span class="part">
+					5
+					<span class="knex-icon connector-ltgray" title="lt. gray"></span>
+				</span>
+				<span class="part">
+					114
+					<span class="knex-icon connector-red" title="red"></span>
+				</span>
+				<span class="part">
+					125
+					<span class="knex-icon connector-green" title="green"></span>
+				</span>
+				<span class="part">
+					290
+					<span class="knex-icon connector-yellow" title="yellow"></span>
+				</span>
+				<span class="part">
+					338
+					<span class="knex-icon connector-blue" title="blue"></span>
+				</span>
+				<span class="part">
+					144
+					<span class="knex-icon connector-white" title="white"></span>
+				</span>
+				<span class="part">
+					530
+					<span class="knex-icon connector-purple" title="purple"></span>
+				</span>
+				<span class="part">
+					32
+					<span class="knex-icon connector-bluemetallic" title="blue (metallic)"></span>
+				</span>
+		</p>
+		<p>
+				<span class="part">
+					12
+					<span class="knex-icon other-mediumtyre" title="medium tyre"></span>
+				</span>
+				<span class="part">
+					12
+					<span class="knex-icon other-mediumhub" title="medium hub"></span>
+				</span>
+				<span class="part">
+					5
+					<span class="knex-icon other-bluegear" title="blue gear"></span>
+				</span>
+				<span class="part">
+					4
+					<span class="knex-icon other-joint" title="joint"></span>
+				</span>
+				<span class="part">
+					9
+					<span class="knex-icon other-smallhub" title="small hub"></span>
+				</span>
+				<span class="part">
+					137
+					<span class="knex-icon other-chain" title="chain"></span>
+				</span>
+				<span class="part">
+					4
+					<span class="knex-icon other-redgear" title="red gear"></span>
+				</span>
+				<span class="part">
+					5
+					<span class="knex-icon other-yellowgear" title="yellow gear"></span>
+				</span>
+				<span class="part">
+					105
+					<span class="knex-icon other-washer" title="washer"></span>
+				</span>
+				<span class="part">
+					8
+					<span class="knex-icon other-smalltyre" title="small tyre"></span>
+				</span>
+		</p>
+	</div>
+
+	<!-- <section class="panel panel-default parts-panel">
+		<div class="panel-body" style="white-space: nowrap">
 				<div class="row" style="margin-bottom: -15px; margin-top: 15px;">
-					<img style="width: 100%" src="1.spiral/parts.jpg" />
+					<img style="width: 100%" src="parts.jpg" />
 				</div>
 		</div>
-	</section>
+	</section> -->
+				<h1>4832 pieces</h1>
+			</div>
+		</div>
+		<div class="container">
+			<div class="row">
+				<div class="col-md-9">
+	<div class="media panel" id="spiral">
+
+			<a class="pull-left" href="1.spiral/1.jpg">
+				<div class="media-object" style="width: 64px; height: 64px; background: gray url(1.spiral/3.thumb.jpg) center; background-size: cover"></div>
+			</a>
+		<div class="media-body">
 			<h4 class="media-heading">spiral</h4>
 
-	<div class="media">
-		<a class="pull-left" href="1.spiral/1.jpg">
-			<div class="media-object" style="width: 64px; height: 64px; background: gray url(1.spiral/1.thumb.jpg) center; background-size: cover"></div>
-		</a>
+	<div class="media panel" id="spiral-1">
+
+			<a href="1.spiral/1.jpg">
+				<img src="1.spiral/1.medium.jpg" class="img-responsive"/>
+			</a>
 		<div class="media-body">
 			<h4 class="media-heading"></h4>
 
 		</div>
 	</div>
-	<div class="media">
-		<a class="pull-left" href="1.spiral/2.jpg">
-			<div class="media-object" style="width: 64px; height: 64px; background: gray url(1.spiral/2.thumb.jpg) center; background-size: cover"></div>
-		</a>
+	<div class="media panel" id="spiral-2">
+
+			<a href="1.spiral/2.jpg">
+				<img src="1.spiral/2.medium.jpg" class="img-responsive"/>
+			</a>
 		<div class="media-body">
 			<h4 class="media-heading"></h4>
 
 		</div>
 	</div>
-	<div class="media">
-		<a class="pull-left" href="1.spiral/3.jpg">
-			<div class="media-object" style="width: 64px; height: 64px; background: gray url(1.spiral/3.thumb.jpg) center; background-size: cover"></div>
-		</a>
+	<div class="media panel" id="spiral-3">
+
+			<a href="1.spiral/3.jpg">
+				<img src="1.spiral/3.medium.jpg" class="img-responsive"/>
+			</a>
 		<div class="media-body">
 			<h4 class="media-heading"></h4>
 
@@ -241,225 +538,167 @@
 	</div>
 		</div>
 	</div>
-	<div class="media">
-		<a class="pull-left" >
-			<div class="media-object" style="width: 64px; height: 64px; background: gray url() center; background-size: cover"></div>
-		</a>
+	<div class="media panel" id="frame">
+
+			<a class="pull-left" >
+				<div class="media-object" style="width: 64px; height: 64px; background: gray url() center; background-size: cover"></div>
+			</a>
 		<div class="media-body">
 			<h4 class="media-heading">frame</h4>
 
-	<div class="media">
-		<a class="pull-left" >
-			<div class="media-object" style="width: 64px; height: 64px; background: gray url(2.frame/1.base/15.thumb.jpg) center; background-size: cover"></div>
-		</a>
+	<div class="media panel" id="frame-base">
+
+			<a class="pull-left" href="2.frame/1.base/1.jpg">
+				<div class="media-object" style="width: 64px; height: 64px; background: gray url(2.frame/1.base/15.thumb.jpg) center; background-size: cover"></div>
+			</a>
 		<div class="media-body">
-	<section class="panel panel-default pull-right parts-panel">
-		<div class="panel-body" style="white-space: nowrap">
-			<div class="row">
-				<div class="col-md-4" style="text-align: right; padding: 0 5px">
-							140
-							<span class="knex-icon rod-green" title="green"></span>
-						<br />
-							85
-							<span class="knex-icon rod-white" title="white"></span>
-						<br />
-							202
-							<span class="knex-icon rod-blue" title="blue"></span>
-						<br />
-							92
-							<span class="knex-icon rod-yellow" title="yellow"></span>
-						<br />
-							98
-							<span class="knex-icon rod-red" title="red"></span>
-						<br />
-							6
-							<span class="knex-icon rod-orange" title="orange"></span>
-						<br />
-							12
-							<span class="knex-icon rod-gray" title="gray"></span>
-						<br />
-				</div>
-				<div class="col-md-4" style="text-align: right; padding: 0 5px">
-							1
-							<span class="knex-icon connector-tan" title="tan"></span>
-						<br />
-							12
-							<span class="knex-icon connector-gray" title="gray"></span>
-						<br />
-							34
-							<span class="knex-icon connector-orange" title="orange"></span>
-						<br />
-							6
-							<span class="knex-icon connector-red" title="red"></span>
-						<br />
-							68
-							<span class="knex-icon connector-green" title="green"></span>
-						<br />
-							70
-							<span class="knex-icon connector-yellow" title="yellow"></span>
-						<br />
-							91
-							<span class="knex-icon connector-blue" title="blue"></span>
-						<br />
-							24
-							<span class="knex-icon connector-white" title="white"></span>
-						<br />
-							159
-							<span class="knex-icon connector-purple" title="purple"></span>
-						<br />
-				</div>
-				<div class="col-md-4" style="text-align: right; padding: 0 5px">
-							1
-							<span class="knex-icon other-mediumtyre" title="medium tyre"></span>
-						<br />
-							3
-							<span class="knex-icon other-washer" title="washer"></span>
-						<br />
-							2
-							<span class="knex-icon other-redgear" title="red gear"></span>
-						<br />
-							1
-							<span class="knex-icon other-mediumhub" title="medium hub"></span>
-						<br />
-				</div>
-			</div>
-				<div class="row" style="margin-bottom: -15px; margin-top: 15px;">
-					<img style="width: 100%" src="2.frame/1.base/parts.jpg" />
-				</div>
-		</div>
-	</section>
 			<h4 class="media-heading">base</h4>
 
-	<div class="media">
-		<a class="pull-left" href="2.frame/1.base/1.jpg">
-			<div class="media-object" style="width: 64px; height: 64px; background: gray url(2.frame/1.base/1.thumb.jpg) center; background-size: cover"></div>
-		</a>
+	<div class="media panel" id="frame-base-1">
+
+			<a href="2.frame/1.base/1.jpg">
+				<img src="2.frame/1.base/1.medium.jpg" class="img-responsive"/>
+			</a>
 		<div class="media-body">
 			<h4 class="media-heading"></h4>
 
 		</div>
 	</div>
-	<div class="media">
-		<a class="pull-left" href="2.frame/1.base/2.jpg">
-			<div class="media-object" style="width: 64px; height: 64px; background: gray url(2.frame/1.base/2.thumb.jpg) center; background-size: cover"></div>
-		</a>
+	<div class="media panel" id="frame-base-2">
+
+			<a href="2.frame/1.base/2.jpg">
+				<img src="2.frame/1.base/2.medium.jpg" class="img-responsive"/>
+			</a>
 		<div class="media-body">
 			<h4 class="media-heading"></h4>
 
 		</div>
 	</div>
-	<div class="media">
-		<a class="pull-left" href="2.frame/1.base/3.jpg">
-			<div class="media-object" style="width: 64px; height: 64px; background: gray url(2.frame/1.base/3.thumb.jpg) center; background-size: cover"></div>
-		</a>
+	<div class="media panel" id="frame-base-3">
+
+			<a href="2.frame/1.base/3.jpg">
+				<img src="2.frame/1.base/3.medium.jpg" class="img-responsive"/>
+			</a>
 		<div class="media-body">
 			<h4 class="media-heading"></h4>
 
 		</div>
 	</div>
-	<div class="media">
-		<a class="pull-left" href="2.frame/1.base/4.jpg">
-			<div class="media-object" style="width: 64px; height: 64px; background: gray url(2.frame/1.base/4.thumb.jpg) center; background-size: cover"></div>
-		</a>
+	<div class="media panel" id="frame-base-4">
+
+			<a href="2.frame/1.base/4.jpg">
+				<img src="2.frame/1.base/4.medium.jpg" class="img-responsive"/>
+			</a>
 		<div class="media-body">
 			<h4 class="media-heading"></h4>
 
 		</div>
 	</div>
-	<div class="media">
-		<a class="pull-left" href="2.frame/1.base/5.jpg">
-			<div class="media-object" style="width: 64px; height: 64px; background: gray url(2.frame/1.base/5.thumb.jpg) center; background-size: cover"></div>
-		</a>
+	<div class="media panel" id="frame-base-5">
+
+			<a href="2.frame/1.base/5.jpg">
+				<img src="2.frame/1.base/5.medium.jpg" class="img-responsive"/>
+			</a>
 		<div class="media-body">
 			<h4 class="media-heading"></h4>
 
 		</div>
 	</div>
-	<div class="media">
-		<a class="pull-left" href="2.frame/1.base/6.jpg">
-			<div class="media-object" style="width: 64px; height: 64px; background: gray url(2.frame/1.base/6.thumb.jpg) center; background-size: cover"></div>
-		</a>
+	<div class="media panel" id="frame-base-6">
+
+			<a href="2.frame/1.base/6.jpg">
+				<img src="2.frame/1.base/6.medium.jpg" class="img-responsive"/>
+			</a>
 		<div class="media-body">
 			<h4 class="media-heading"></h4>
 
 		</div>
 	</div>
-	<div class="media">
-		<a class="pull-left" href="2.frame/1.base/7.jpg">
-			<div class="media-object" style="width: 64px; height: 64px; background: gray url(2.frame/1.base/7.thumb.jpg) center; background-size: cover"></div>
-		</a>
+	<div class="media panel" id="frame-base-7">
+
+			<a href="2.frame/1.base/7.jpg">
+				<img src="2.frame/1.base/7.medium.jpg" class="img-responsive"/>
+			</a>
 		<div class="media-body">
 			<h4 class="media-heading"></h4>
 
 		</div>
 	</div>
-	<div class="media">
-		<a class="pull-left" href="2.frame/1.base/8.jpg">
-			<div class="media-object" style="width: 64px; height: 64px; background: gray url(2.frame/1.base/8.thumb.jpg) center; background-size: cover"></div>
-		</a>
+	<div class="media panel" id="frame-base-8">
+
+			<a href="2.frame/1.base/8.jpg">
+				<img src="2.frame/1.base/8.medium.jpg" class="img-responsive"/>
+			</a>
 		<div class="media-body">
 			<h4 class="media-heading"></h4>
 
 		</div>
 	</div>
-	<div class="media">
-		<a class="pull-left" href="2.frame/1.base/9.jpg">
-			<div class="media-object" style="width: 64px; height: 64px; background: gray url(2.frame/1.base/9.thumb.jpg) center; background-size: cover"></div>
-		</a>
+	<div class="media panel" id="frame-base-9">
+
+			<a href="2.frame/1.base/9.jpg">
+				<img src="2.frame/1.base/9.medium.jpg" class="img-responsive"/>
+			</a>
 		<div class="media-body">
 			<h4 class="media-heading"></h4>
 
 		</div>
 	</div>
-	<div class="media">
-		<a class="pull-left" href="2.frame/1.base/10.jpg">
-			<div class="media-object" style="width: 64px; height: 64px; background: gray url(2.frame/1.base/10.thumb.jpg) center; background-size: cover"></div>
-		</a>
+	<div class="media panel" id="frame-base-10">
+
+			<a href="2.frame/1.base/10.jpg">
+				<img src="2.frame/1.base/10.medium.jpg" class="img-responsive"/>
+			</a>
 		<div class="media-body">
 			<h4 class="media-heading"></h4>
 
 		</div>
 	</div>
-	<div class="media">
-		<a class="pull-left" href="2.frame/1.base/11.jpg">
-			<div class="media-object" style="width: 64px; height: 64px; background: gray url(2.frame/1.base/11.thumb.jpg) center; background-size: cover"></div>
-		</a>
+	<div class="media panel" id="frame-base-11">
+
+			<a href="2.frame/1.base/11.jpg">
+				<img src="2.frame/1.base/11.medium.jpg" class="img-responsive"/>
+			</a>
 		<div class="media-body">
 			<h4 class="media-heading"></h4>
 
 		</div>
 	</div>
-	<div class="media">
-		<a class="pull-left" href="2.frame/1.base/12.jpg">
-			<div class="media-object" style="width: 64px; height: 64px; background: gray url(2.frame/1.base/12.thumb.jpg) center; background-size: cover"></div>
-		</a>
+	<div class="media panel" id="frame-base-12">
+
+			<a href="2.frame/1.base/12.jpg">
+				<img src="2.frame/1.base/12.medium.jpg" class="img-responsive"/>
+			</a>
 		<div class="media-body">
 			<h4 class="media-heading"></h4>
 
 		</div>
 	</div>
-	<div class="media">
-		<a class="pull-left" href="2.frame/1.base/13.jpg">
-			<div class="media-object" style="width: 64px; height: 64px; background: gray url(2.frame/1.base/13.thumb.jpg) center; background-size: cover"></div>
-		</a>
+	<div class="media panel" id="frame-base-13">
+
+			<a href="2.frame/1.base/13.jpg">
+				<img src="2.frame/1.base/13.medium.jpg" class="img-responsive"/>
+			</a>
 		<div class="media-body">
 			<h4 class="media-heading"></h4>
 
 		</div>
 	</div>
-	<div class="media">
-		<a class="pull-left" href="2.frame/1.base/14.jpg">
-			<div class="media-object" style="width: 64px; height: 64px; background: gray url(2.frame/1.base/14.thumb.jpg) center; background-size: cover"></div>
-		</a>
+	<div class="media panel" id="frame-base-14">
+
+			<a href="2.frame/1.base/14.jpg">
+				<img src="2.frame/1.base/14.medium.jpg" class="img-responsive"/>
+			</a>
 		<div class="media-body">
 			<h4 class="media-heading"></h4>
 
 		</div>
 	</div>
-	<div class="media">
-		<a class="pull-left" href="2.frame/1.base/15.jpg">
-			<div class="media-object" style="width: 64px; height: 64px; background: gray url(2.frame/1.base/15.thumb.jpg) center; background-size: cover"></div>
-		</a>
+	<div class="media panel" id="frame-base-15">
+
+			<a href="2.frame/1.base/15.jpg">
+				<img src="2.frame/1.base/15.medium.jpg" class="img-responsive"/>
+			</a>
 		<div class="media-body">
 			<h4 class="media-heading"></h4>
 
@@ -467,564 +706,347 @@
 	</div>
 		</div>
 	</div>
-	<div class="media">
-		<a class="pull-left" >
-			<div class="media-object" style="width: 64px; height: 64px; background: gray url(2.frame/2.tower/11.thumb.jpg) center; background-size: cover"></div>
-		</a>
+	<div class="media panel" id="frame-tower">
+
+			<a class="pull-left" href="2.frame/2.tower/1.bottom/1.jpg">
+				<div class="media-object" style="width: 64px; height: 64px; background: gray url(2.frame/2.tower/11.thumb.jpg) center; background-size: cover"></div>
+			</a>
 		<div class="media-body">
 			<h4 class="media-heading">tower</h4>
 
-	<div class="media">
-		<a class="pull-left" >
-			<div class="media-object" style="width: 64px; height: 64px; background: gray url(2.frame/2.tower/1.bottom/1.thumb.jpg) center; background-size: cover"></div>
-		</a>
+	<div class="media panel" id="frame-tower-bottom">
+
+			<a href="2.frame/2.tower/1.bottom/1.jpg">
+				<img src="2.frame/2.tower/1.bottom/1.medium.jpg" class="img-responsive"/>
+			</a>
 		<div class="media-body">
-	<section class="panel panel-default pull-right parts-panel">
-		<div class="panel-body" style="white-space: nowrap">
-			<div class="row">
-				<div class="col-md-4" style="text-align: right; padding: 0 5px">
-							10
-							<span class="knex-icon rod-green" title="green"></span>
-						<br />
-							6
-							<span class="knex-icon rod-white" title="white"></span>
-						<br />
-							27
-							<span class="knex-icon rod-blue" title="blue"></span>
-						<br />
-							11
-							<span class="knex-icon rod-yellow" title="yellow"></span>
-						<br />
-							36
-							<span class="knex-icon rod-red" title="red"></span>
-						<br />
-							22
-							<span class="knex-icon rod-orange" title="orange"></span>
-						<br />
-							6
-							<span class="knex-icon rod-gray" title="gray"></span>
-						<br />
-				</div>
-				<div class="col-md-4" style="text-align: right; padding: 0 5px">
-							13
-							<span class="knex-icon connector-orange" title="orange"></span>
-						<br />
-							14
-							<span class="knex-icon connector-yellow" title="yellow"></span>
-						<br />
-							8
-							<span class="knex-icon connector-blue" title="blue"></span>
-						<br />
-							26
-							<span class="knex-icon connector-purple" title="purple"></span>
-						<br />
-				</div>
-				<div class="col-md-4" style="text-align: right; padding: 0 5px">
-				</div>
-			</div>
-		</div>
-	</section>
 			<h4 class="media-heading">bottom</h4>
 
-	<div class="media">
-		<a class="pull-left" href="2.frame/2.tower/1.bottom/1.jpg">
-			<div class="media-object" style="width: 64px; height: 64px; background: gray url(2.frame/2.tower/1.bottom/1.thumb.jpg) center; background-size: cover"></div>
-		</a>
-		<div class="media-body">
-			<h4 class="media-heading"></h4>
+		</div>
+	</div>
+	<div class="media panel" id="frame-tower-middle">
 
-		</div>
-	</div>
-		</div>
-	</div>
-	<div class="media">
-		<a class="pull-left" >
-			<div class="media-object" style="width: 64px; height: 64px; background: gray url(2.frame/2.tower/2.middle/1.thumb.jpg) center; background-size: cover"></div>
-		</a>
+			<a href="2.frame/2.tower/2.middle/1.jpg">
+				<img src="2.frame/2.tower/2.middle/1.medium.jpg" class="img-responsive"/>
+			</a>
 		<div class="media-body">
-	<section class="panel panel-default pull-right parts-panel">
-		<div class="panel-body" style="white-space: nowrap">
-			<div class="row">
-				<div class="col-md-4" style="text-align: right; padding: 0 5px">
-							32
-							<span class="knex-icon rod-green" title="green"></span>
-						<br />
-							8
-							<span class="knex-icon rod-white" title="white"></span>
-						<br />
-							28
-							<span class="knex-icon rod-blue" title="blue"></span>
-						<br />
-							8
-							<span class="knex-icon rod-yellow" title="yellow"></span>
-						<br />
-							46
-							<span class="knex-icon rod-red" title="red"></span>
-						<br />
-							24
-							<span class="knex-icon rod-orange" title="orange"></span>
-						<br />
-							8
-							<span class="knex-icon rod-gray" title="gray"></span>
-						<br />
-				</div>
-				<div class="col-md-4" style="text-align: right; padding: 0 5px">
-							2
-							<span class="knex-icon connector-gray" title="gray"></span>
-						<br />
-							16
-							<span class="knex-icon connector-orange" title="orange"></span>
-						<br />
-							14
-							<span class="knex-icon connector-yellow" title="yellow"></span>
-						<br />
-							30
-							<span class="knex-icon connector-blue" title="blue"></span>
-						<br />
-							2
-							<span class="knex-icon connector-white" title="white"></span>
-						<br />
-							42
-							<span class="knex-icon connector-purple" title="purple"></span>
-						<br />
-				</div>
-				<div class="col-md-4" style="text-align: right; padding: 0 5px">
-				</div>
-			</div>
-		</div>
-	</section>
 			<h4 class="media-heading">middle</h4>
 
-	<div class="media">
-		<a class="pull-left" href="2.frame/2.tower/2.middle/1.jpg">
-			<div class="media-object" style="width: 64px; height: 64px; background: gray url(2.frame/2.tower/2.middle/1.thumb.jpg) center; background-size: cover"></div>
-		</a>
-		<div class="media-body">
-			<h4 class="media-heading"></h4>
+		</div>
+	</div>
+	<div class="media panel" id="frame-tower-top">
 
-		</div>
-	</div>
-		</div>
-	</div>
-	<div class="media">
-		<a class="pull-left" >
-			<div class="media-object" style="width: 64px; height: 64px; background: gray url(2.frame/2.tower/3.top/1.thumb.jpg) center; background-size: cover"></div>
-		</a>
-		<div class="media-body">
-	<section class="panel panel-default pull-right parts-panel">
-		<div class="panel-body" style="white-space: nowrap">
-			<div class="row">
-				<div class="col-md-4" style="text-align: right; padding: 0 5px">
-							8
-							<span class="knex-icon rod-green" title="green"></span>
-						<br />
-							10
-							<span class="knex-icon rod-white" title="white"></span>
-						<br />
-							36
-							<span class="knex-icon rod-blue" title="blue"></span>
-						<br />
-							8
-							<span class="knex-icon rod-yellow" title="yellow"></span>
-						<br />
-							48
-							<span class="knex-icon rod-red" title="red"></span>
-						<br />
-							24
-							<span class="knex-icon rod-orange" title="orange"></span>
-						<br />
-							8
-							<span class="knex-icon rod-gray" title="gray"></span>
-						<br />
-				</div>
-				<div class="col-md-4" style="text-align: right; padding: 0 5px">
-							1
-							<span class="knex-icon connector-gray" title="gray"></span>
-						<br />
-							30
-							<span class="knex-icon connector-orange" title="orange"></span>
-						<br />
-							14
-							<span class="knex-icon connector-yellow" title="yellow"></span>
-						<br />
-							17
-							<span class="knex-icon connector-blue" title="blue"></span>
-						<br />
-							1
-							<span class="knex-icon connector-white" title="white"></span>
-						<br />
-							43
-							<span class="knex-icon connector-purple" title="purple"></span>
-						<br />
-				</div>
-				<div class="col-md-4" style="text-align: right; padding: 0 5px">
-							2
-							<span class="knex-icon other-joint" title="joint"></span>
-						<br />
-				</div>
-			</div>
-		</div>
-	</section>
-			<h4 class="media-heading">top</h4>
-
-	<div class="media">
-		<a class="pull-left" href="2.frame/2.tower/3.top/1.jpg">
-			<div class="media-object" style="width: 64px; height: 64px; background: gray url(2.frame/2.tower/3.top/1.thumb.jpg) center; background-size: cover"></div>
-		</a>
-		<div class="media-body">
-			<h4 class="media-heading"></h4>
-
-		</div>
-	</div>
-		</div>
-	</div>
-	<div class="media">
-		<a class="pull-left" href="2.frame/2.tower/4.jpg">
-			<div class="media-object" style="width: 64px; height: 64px; background: gray url(2.frame/2.tower/4.thumb.jpg) center; background-size: cover"></div>
-		</a>
-		<div class="media-body">
-			<h4 class="media-heading"></h4>
-
-		</div>
-	</div>
-	<div class="media">
-		<a class="pull-left" href="2.frame/2.tower/5.jpg">
-			<div class="media-object" style="width: 64px; height: 64px; background: gray url(2.frame/2.tower/5.thumb.jpg) center; background-size: cover"></div>
-		</a>
-		<div class="media-body">
-			<h4 class="media-heading"></h4>
-
-		</div>
-	</div>
-	<div class="media">
-		<a class="pull-left" href="2.frame/2.tower/6.jpg">
-			<div class="media-object" style="width: 64px; height: 64px; background: gray url(2.frame/2.tower/6.thumb.jpg) center; background-size: cover"></div>
-		</a>
-		<div class="media-body">
-			<h4 class="media-heading"></h4>
-
-		</div>
-	</div>
-	<div class="media">
-		<a class="pull-left" href="2.frame/2.tower/7.jpg">
-			<div class="media-object" style="width: 64px; height: 64px; background: gray url(2.frame/2.tower/7.thumb.jpg) center; background-size: cover"></div>
-		</a>
-		<div class="media-body">
-			<h4 class="media-heading"></h4>
-
-		</div>
-	</div>
-	<div class="media">
-		<a class="pull-left" href="2.frame/2.tower/8.jpg">
-			<div class="media-object" style="width: 64px; height: 64px; background: gray url(2.frame/2.tower/8.thumb.jpg) center; background-size: cover"></div>
-		</a>
-		<div class="media-body">
-			<h4 class="media-heading"></h4>
-
-		</div>
-	</div>
-	<div class="media">
-		<a class="pull-left" href="2.frame/2.tower/9.jpg">
-			<div class="media-object" style="width: 64px; height: 64px; background: gray url(2.frame/2.tower/9.thumb.jpg) center; background-size: cover"></div>
-		</a>
-		<div class="media-body">
-			<h4 class="media-heading"></h4>
-
-		</div>
-	</div>
-	<div class="media">
-		<a class="pull-left" href="2.frame/2.tower/10.jpg">
-			<div class="media-object" style="width: 64px; height: 64px; background: gray url(2.frame/2.tower/10.thumb.jpg) center; background-size: cover"></div>
-		</a>
-		<div class="media-body">
-			<h4 class="media-heading"></h4>
-
-		</div>
-	</div>
-	<div class="media">
-		<a class="pull-left" href="2.frame/2.tower/11.jpg">
-			<div class="media-object" style="width: 64px; height: 64px; background: gray url(2.frame/2.tower/11.thumb.jpg) center; background-size: cover"></div>
-		</a>
-		<div class="media-body">
-			<h4 class="media-heading"></h4>
-
-		</div>
-	</div>
-		</div>
-	</div>
-		</div>
-	</div>
-	<div class="media">
-		<a class="pull-left" >
-			<div class="media-object" style="width: 64px; height: 64px; background: gray url(3.top/6.thumb.jpg) center; background-size: cover"></div>
-		</a>
+			<a href="2.frame/2.tower/3.top/1.jpg">
+				<img src="2.frame/2.tower/3.top/1.medium.jpg" class="img-responsive"/>
+			</a>
 		<div class="media-body">
 			<h4 class="media-heading">top</h4>
 
-	<div class="media">
-		<a class="pull-left" >
-			<div class="media-object" style="width: 64px; height: 64px; background: gray url(3.top/1.inside/13.thumb.jpg) center; background-size: cover"></div>
-		</a>
+		</div>
+	</div>
+	<div class="media panel" id="frame-tower-4">
+
+			<a href="2.frame/2.tower/4.jpg">
+				<img src="2.frame/2.tower/4.medium.jpg" class="img-responsive"/>
+			</a>
+		<div class="media-body">
+			<h4 class="media-heading"></h4>
+
+		</div>
+	</div>
+	<div class="media panel" id="frame-tower-5">
+
+			<a href="2.frame/2.tower/5.jpg">
+				<img src="2.frame/2.tower/5.medium.jpg" class="img-responsive"/>
+			</a>
+		<div class="media-body">
+			<h4 class="media-heading"></h4>
+
+		</div>
+	</div>
+	<div class="media panel" id="frame-tower-6">
+
+			<a href="2.frame/2.tower/6.jpg">
+				<img src="2.frame/2.tower/6.medium.jpg" class="img-responsive"/>
+			</a>
+		<div class="media-body">
+			<h4 class="media-heading"></h4>
+
+		</div>
+	</div>
+	<div class="media panel" id="frame-tower-7">
+
+			<a href="2.frame/2.tower/7.jpg">
+				<img src="2.frame/2.tower/7.medium.jpg" class="img-responsive"/>
+			</a>
+		<div class="media-body">
+			<h4 class="media-heading"></h4>
+
+		</div>
+	</div>
+	<div class="media panel" id="frame-tower-8">
+
+			<a href="2.frame/2.tower/8.jpg">
+				<img src="2.frame/2.tower/8.medium.jpg" class="img-responsive"/>
+			</a>
+		<div class="media-body">
+			<h4 class="media-heading"></h4>
+
+		</div>
+	</div>
+	<div class="media panel" id="frame-tower-9">
+
+			<a href="2.frame/2.tower/9.jpg">
+				<img src="2.frame/2.tower/9.medium.jpg" class="img-responsive"/>
+			</a>
+		<div class="media-body">
+			<h4 class="media-heading"></h4>
+
+		</div>
+	</div>
+	<div class="media panel" id="frame-tower-10">
+
+			<a href="2.frame/2.tower/10.jpg">
+				<img src="2.frame/2.tower/10.medium.jpg" class="img-responsive"/>
+			</a>
+		<div class="media-body">
+			<h4 class="media-heading"></h4>
+
+		</div>
+	</div>
+	<div class="media panel" id="frame-tower-11">
+
+			<a href="2.frame/2.tower/11.jpg">
+				<img src="2.frame/2.tower/11.medium.jpg" class="img-responsive"/>
+			</a>
+		<div class="media-body">
+			<h4 class="media-heading"></h4>
+
+		</div>
+	</div>
+		</div>
+	</div>
+		</div>
+	</div>
+	<div class="media panel" id="top">
+
+			<a class="pull-left" href="3.top/1.inside/1.mechanism/1.jpg">
+				<div class="media-object" style="width: 64px; height: 64px; background: gray url(3.top/6.thumb.jpg) center; background-size: cover"></div>
+			</a>
+		<div class="media-body">
+			<h4 class="media-heading">top</h4>
+
+	<div class="media panel" id="top-inside">
+
+			<a class="pull-left" href="3.top/1.inside/1.mechanism/1.jpg">
+				<div class="media-object" style="width: 64px; height: 64px; background: gray url(3.top/1.inside/13.thumb.jpg) center; background-size: cover"></div>
+			</a>
 		<div class="media-body">
 			<h4 class="media-heading">inside</h4>
 
-	<div class="media">
-		<a class="pull-left" >
-			<div class="media-object" style="width: 64px; height: 64px; background: gray url(3.top/1.inside/1.mechanism/20.thumb.jpg) center; background-size: cover"></div>
-		</a>
+	<div class="media panel" id="top-inside-mechanism">
+
+			<a class="pull-left" href="3.top/1.inside/1.mechanism/1.jpg">
+				<div class="media-object" style="width: 64px; height: 64px; background: gray url(3.top/1.inside/1.mechanism/20.thumb.jpg) center; background-size: cover"></div>
+			</a>
 		<div class="media-body">
-	<section class="panel panel-default pull-right parts-panel">
-		<div class="panel-body" style="white-space: nowrap">
-			<div class="row">
-				<div class="col-md-4" style="text-align: right; padding: 0 5px">
-							75
-							<span class="knex-icon rod-green" title="green"></span>
-						<br />
-							19
-							<span class="knex-icon rod-white" title="white"></span>
-						<br />
-							109
-							<span class="knex-icon rod-blue" title="blue"></span>
-						<br />
-							11
-							<span class="knex-icon rod-yellow" title="yellow"></span>
-						<br />
-							9
-							<span class="knex-icon rod-red" title="red"></span>
-						<br />
-							2
-							<span class="knex-icon rod-grayblack" title="gray (black)"></span>
-						<br />
-							1
-							<span class="knex-icon rod-gray" title="gray"></span>
-						<br />
-				</div>
-				<div class="col-md-4" style="text-align: right; padding: 0 5px">
-							39
-							<span class="knex-icon connector-tan" title="tan"></span>
-						<br />
-							28
-							<span class="knex-icon connector-gray" title="gray"></span>
-						<br />
-							30
-							<span class="knex-icon connector-orange" title="orange"></span>
-						<br />
-							1
-							<span class="knex-icon connector-ltgray" title="lt. gray"></span>
-						<br />
-							4
-							<span class="knex-icon connector-red" title="red"></span>
-						<br />
-							29
-							<span class="knex-icon connector-yellow" title="yellow"></span>
-						<br />
-							37
-							<span class="knex-icon connector-blue" title="blue"></span>
-						<br />
-							20
-							<span class="knex-icon connector-white" title="white"></span>
-						<br />
-							29
-							<span class="knex-icon connector-purple" title="purple"></span>
-						<br />
-				</div>
-				<div class="col-md-4" style="text-align: right; padding: 0 5px">
-							5
-							<span class="knex-icon other-bluegear" title="blue gear"></span>
-						<br />
-							2
-							<span class="knex-icon other-redgear" title="red gear"></span>
-						<br />
-							99
-							<span class="knex-icon other-washer" title="washer"></span>
-						<br />
-							5
-							<span class="knex-icon other-yellowgear" title="yellow gear"></span>
-						<br />
-				</div>
-			</div>
-				<div class="row" style="margin-bottom: -15px; margin-top: 15px;">
-					<img style="width: 100%" src="3.top/1.inside/1.mechanism/parts.jpg" />
-				</div>
-		</div>
-	</section>
 			<h4 class="media-heading">mechanism</h4>
 
-	<div class="media">
-		<a class="pull-left" href="3.top/1.inside/1.mechanism/1.jpg">
-			<div class="media-object" style="width: 64px; height: 64px; background: gray url(3.top/1.inside/1.mechanism/1.thumb.jpg) center; background-size: cover"></div>
-		</a>
+	<div class="media panel" id="top-inside-mechanism-1">
+
+			<a href="3.top/1.inside/1.mechanism/1.jpg">
+				<img src="3.top/1.inside/1.mechanism/1.medium.jpg" class="img-responsive"/>
+			</a>
 		<div class="media-body">
 			<h4 class="media-heading"></h4>
 
 		</div>
 	</div>
-	<div class="media">
-		<a class="pull-left" href="3.top/1.inside/1.mechanism/2.jpg">
-			<div class="media-object" style="width: 64px; height: 64px; background: gray url(3.top/1.inside/1.mechanism/2.thumb.jpg) center; background-size: cover"></div>
-		</a>
+	<div class="media panel" id="top-inside-mechanism-2">
+
+			<a href="3.top/1.inside/1.mechanism/2.jpg">
+				<img src="3.top/1.inside/1.mechanism/2.medium.jpg" class="img-responsive"/>
+			</a>
 		<div class="media-body">
 			<h4 class="media-heading"></h4>
 
 		</div>
 	</div>
-	<div class="media">
-		<a class="pull-left" href="3.top/1.inside/1.mechanism/3.jpg">
-			<div class="media-object" style="width: 64px; height: 64px; background: gray url(3.top/1.inside/1.mechanism/3.thumb.jpg) center; background-size: cover"></div>
-		</a>
+	<div class="media panel" id="top-inside-mechanism-3">
+
+			<a href="3.top/1.inside/1.mechanism/3.jpg">
+				<img src="3.top/1.inside/1.mechanism/3.medium.jpg" class="img-responsive"/>
+			</a>
 		<div class="media-body">
 			<h4 class="media-heading"></h4>
 
 		</div>
 	</div>
-	<div class="media">
-		<a class="pull-left" href="3.top/1.inside/1.mechanism/4.jpg">
-			<div class="media-object" style="width: 64px; height: 64px; background: gray url(3.top/1.inside/1.mechanism/4.thumb.jpg) center; background-size: cover"></div>
-		</a>
+	<div class="media panel" id="top-inside-mechanism-4">
+
+			<a href="3.top/1.inside/1.mechanism/4.jpg">
+				<img src="3.top/1.inside/1.mechanism/4.medium.jpg" class="img-responsive"/>
+			</a>
 		<div class="media-body">
 			<h4 class="media-heading"></h4>
 
 		</div>
 	</div>
-	<div class="media">
-		<a class="pull-left" href="3.top/1.inside/1.mechanism/5.jpg">
-			<div class="media-object" style="width: 64px; height: 64px; background: gray url(3.top/1.inside/1.mechanism/5.thumb.jpg) center; background-size: cover"></div>
-		</a>
+	<div class="media panel" id="top-inside-mechanism-5">
+
+			<a href="3.top/1.inside/1.mechanism/5.jpg">
+				<img src="3.top/1.inside/1.mechanism/5.medium.jpg" class="img-responsive"/>
+			</a>
 		<div class="media-body">
 			<h4 class="media-heading"></h4>
 
 		</div>
 	</div>
-	<div class="media">
-		<a class="pull-left" href="3.top/1.inside/1.mechanism/6.jpg">
-			<div class="media-object" style="width: 64px; height: 64px; background: gray url(3.top/1.inside/1.mechanism/6.thumb.jpg) center; background-size: cover"></div>
-		</a>
+	<div class="media panel" id="top-inside-mechanism-6">
+
+			<a href="3.top/1.inside/1.mechanism/6.jpg">
+				<img src="3.top/1.inside/1.mechanism/6.medium.jpg" class="img-responsive"/>
+			</a>
 		<div class="media-body">
 			<h4 class="media-heading"></h4>
 
 		</div>
 	</div>
-	<div class="media">
-		<a class="pull-left" href="3.top/1.inside/1.mechanism/7.jpg">
-			<div class="media-object" style="width: 64px; height: 64px; background: gray url(3.top/1.inside/1.mechanism/7.thumb.jpg) center; background-size: cover"></div>
-		</a>
+	<div class="media panel" id="top-inside-mechanism-7">
+
+			<a href="3.top/1.inside/1.mechanism/7.jpg">
+				<img src="3.top/1.inside/1.mechanism/7.medium.jpg" class="img-responsive"/>
+			</a>
 		<div class="media-body">
 			<h4 class="media-heading"></h4>
 
 		</div>
 	</div>
-	<div class="media">
-		<a class="pull-left" href="3.top/1.inside/1.mechanism/8.jpg">
-			<div class="media-object" style="width: 64px; height: 64px; background: gray url(3.top/1.inside/1.mechanism/8.thumb.jpg) center; background-size: cover"></div>
-		</a>
+	<div class="media panel" id="top-inside-mechanism-8">
+
+			<a href="3.top/1.inside/1.mechanism/8.jpg">
+				<img src="3.top/1.inside/1.mechanism/8.medium.jpg" class="img-responsive"/>
+			</a>
 		<div class="media-body">
 			<h4 class="media-heading"></h4>
 
 		</div>
 	</div>
-	<div class="media">
-		<a class="pull-left" href="3.top/1.inside/1.mechanism/9.jpg">
-			<div class="media-object" style="width: 64px; height: 64px; background: gray url(3.top/1.inside/1.mechanism/9.thumb.jpg) center; background-size: cover"></div>
-		</a>
+	<div class="media panel" id="top-inside-mechanism-9">
+
+			<a href="3.top/1.inside/1.mechanism/9.jpg">
+				<img src="3.top/1.inside/1.mechanism/9.medium.jpg" class="img-responsive"/>
+			</a>
 		<div class="media-body">
 			<h4 class="media-heading"></h4>
 
 		</div>
 	</div>
-	<div class="media">
-		<a class="pull-left" href="3.top/1.inside/1.mechanism/10.jpg">
-			<div class="media-object" style="width: 64px; height: 64px; background: gray url(3.top/1.inside/1.mechanism/10.thumb.jpg) center; background-size: cover"></div>
-		</a>
+	<div class="media panel" id="top-inside-mechanism-10">
+
+			<a href="3.top/1.inside/1.mechanism/10.jpg">
+				<img src="3.top/1.inside/1.mechanism/10.medium.jpg" class="img-responsive"/>
+			</a>
 		<div class="media-body">
 			<h4 class="media-heading"></h4>
 
 		</div>
 	</div>
-	<div class="media">
-		<a class="pull-left" href="3.top/1.inside/1.mechanism/11.jpg">
-			<div class="media-object" style="width: 64px; height: 64px; background: gray url(3.top/1.inside/1.mechanism/11.thumb.jpg) center; background-size: cover"></div>
-		</a>
+	<div class="media panel" id="top-inside-mechanism-11">
+
+			<a href="3.top/1.inside/1.mechanism/11.jpg">
+				<img src="3.top/1.inside/1.mechanism/11.medium.jpg" class="img-responsive"/>
+			</a>
 		<div class="media-body">
 			<h4 class="media-heading"></h4>
 
 		</div>
 	</div>
-	<div class="media">
-		<a class="pull-left" href="3.top/1.inside/1.mechanism/12.jpg">
-			<div class="media-object" style="width: 64px; height: 64px; background: gray url(3.top/1.inside/1.mechanism/12.thumb.jpg) center; background-size: cover"></div>
-		</a>
+	<div class="media panel" id="top-inside-mechanism-12">
+
+			<a href="3.top/1.inside/1.mechanism/12.jpg">
+				<img src="3.top/1.inside/1.mechanism/12.medium.jpg" class="img-responsive"/>
+			</a>
 		<div class="media-body">
 			<h4 class="media-heading"></h4>
 
 		</div>
 	</div>
-	<div class="media">
-		<a class="pull-left" href="3.top/1.inside/1.mechanism/13.jpg">
-			<div class="media-object" style="width: 64px; height: 64px; background: gray url(3.top/1.inside/1.mechanism/13.thumb.jpg) center; background-size: cover"></div>
-		</a>
+	<div class="media panel" id="top-inside-mechanism-13">
+
+			<a href="3.top/1.inside/1.mechanism/13.jpg">
+				<img src="3.top/1.inside/1.mechanism/13.medium.jpg" class="img-responsive"/>
+			</a>
 		<div class="media-body">
 			<h4 class="media-heading"></h4>
 
 		</div>
 	</div>
-	<div class="media">
-		<a class="pull-left" href="3.top/1.inside/1.mechanism/14.jpg">
-			<div class="media-object" style="width: 64px; height: 64px; background: gray url(3.top/1.inside/1.mechanism/14.thumb.jpg) center; background-size: cover"></div>
-		</a>
+	<div class="media panel" id="top-inside-mechanism-14">
+
+			<a href="3.top/1.inside/1.mechanism/14.jpg">
+				<img src="3.top/1.inside/1.mechanism/14.medium.jpg" class="img-responsive"/>
+			</a>
 		<div class="media-body">
 			<h4 class="media-heading"></h4>
 
 		</div>
 	</div>
-	<div class="media">
-		<a class="pull-left" href="3.top/1.inside/1.mechanism/15.jpg">
-			<div class="media-object" style="width: 64px; height: 64px; background: gray url(3.top/1.inside/1.mechanism/15.thumb.jpg) center; background-size: cover"></div>
-		</a>
+	<div class="media panel" id="top-inside-mechanism-15">
+
+			<a href="3.top/1.inside/1.mechanism/15.jpg">
+				<img src="3.top/1.inside/1.mechanism/15.medium.jpg" class="img-responsive"/>
+			</a>
 		<div class="media-body">
 			<h4 class="media-heading"></h4>
 
 		</div>
 	</div>
-	<div class="media">
-		<a class="pull-left" href="3.top/1.inside/1.mechanism/16.jpg">
-			<div class="media-object" style="width: 64px; height: 64px; background: gray url(3.top/1.inside/1.mechanism/16.thumb.jpg) center; background-size: cover"></div>
-		</a>
+	<div class="media panel" id="top-inside-mechanism-16">
+
+			<a href="3.top/1.inside/1.mechanism/16.jpg">
+				<img src="3.top/1.inside/1.mechanism/16.medium.jpg" class="img-responsive"/>
+			</a>
 		<div class="media-body">
 			<h4 class="media-heading"></h4>
 
 		</div>
 	</div>
-	<div class="media">
-		<a class="pull-left" href="3.top/1.inside/1.mechanism/17.jpg">
-			<div class="media-object" style="width: 64px; height: 64px; background: gray url(3.top/1.inside/1.mechanism/17.thumb.jpg) center; background-size: cover"></div>
-		</a>
+	<div class="media panel" id="top-inside-mechanism-17">
+
+			<a href="3.top/1.inside/1.mechanism/17.jpg">
+				<img src="3.top/1.inside/1.mechanism/17.medium.jpg" class="img-responsive"/>
+			</a>
 		<div class="media-body">
 			<h4 class="media-heading"></h4>
 
 		</div>
 	</div>
-	<div class="media">
-		<a class="pull-left" href="3.top/1.inside/1.mechanism/18.jpg">
-			<div class="media-object" style="width: 64px; height: 64px; background: gray url(3.top/1.inside/1.mechanism/18.thumb.jpg) center; background-size: cover"></div>
-		</a>
+	<div class="media panel" id="top-inside-mechanism-18">
+
+			<a href="3.top/1.inside/1.mechanism/18.jpg">
+				<img src="3.top/1.inside/1.mechanism/18.medium.jpg" class="img-responsive"/>
+			</a>
 		<div class="media-body">
 			<h4 class="media-heading"></h4>
 
 		</div>
 	</div>
-	<div class="media">
-		<a class="pull-left" href="3.top/1.inside/1.mechanism/19.jpg">
-			<div class="media-object" style="width: 64px; height: 64px; background: gray url(3.top/1.inside/1.mechanism/19.thumb.jpg) center; background-size: cover"></div>
-		</a>
+	<div class="media panel" id="top-inside-mechanism-19">
+
+			<a href="3.top/1.inside/1.mechanism/19.jpg">
+				<img src="3.top/1.inside/1.mechanism/19.medium.jpg" class="img-responsive"/>
+			</a>
 		<div class="media-body">
 			<h4 class="media-heading"></h4>
 
 		</div>
 	</div>
-	<div class="media">
-		<a class="pull-left" href="3.top/1.inside/1.mechanism/20.jpg">
-			<div class="media-object" style="width: 64px; height: 64px; background: gray url(3.top/1.inside/1.mechanism/20.thumb.jpg) center; background-size: cover"></div>
-		</a>
+	<div class="media panel" id="top-inside-mechanism-20">
+
+			<a href="3.top/1.inside/1.mechanism/20.jpg">
+				<img src="3.top/1.inside/1.mechanism/20.medium.jpg" class="img-responsive"/>
+			</a>
 		<div class="media-body">
 			<h4 class="media-heading"></h4>
 
@@ -1032,86 +1054,29 @@
 	</div>
 		</div>
 	</div>
-	<div class="media">
-		<a class="pull-left" >
-			<div class="media-object" style="width: 64px; height: 64px; background: gray url(3.top/1.inside/2.front/2.thumb.jpg) center; background-size: cover"></div>
-		</a>
+	<div class="media panel" id="top-inside-front">
+
+			<a class="pull-left" href="3.top/1.inside/2.front/1.jpg">
+				<div class="media-object" style="width: 64px; height: 64px; background: gray url(3.top/1.inside/2.front/2.thumb.jpg) center; background-size: cover"></div>
+			</a>
 		<div class="media-body">
-	<section class="panel panel-default pull-right parts-panel">
-		<div class="panel-body" style="white-space: nowrap">
-			<div class="row">
-				<div class="col-md-4" style="text-align: right; padding: 0 5px">
-							58
-							<span class="knex-icon rod-green" title="green"></span>
-						<br />
-							14
-							<span class="knex-icon rod-white" title="white"></span>
-						<br />
-							63
-							<span class="knex-icon rod-blue" title="blue"></span>
-						<br />
-							14
-							<span class="knex-icon rod-yellow" title="yellow"></span>
-						<br />
-							4
-							<span class="knex-icon rod-red" title="red"></span>
-						<br />
-							6
-							<span class="knex-icon rod-orange" title="orange"></span>
-						<br />
-				</div>
-				<div class="col-md-4" style="text-align: right; padding: 0 5px">
-							4
-							<span class="knex-icon connector-orange" title="orange"></span>
-						<br />
-							13
-							<span class="knex-icon connector-green" title="green"></span>
-						<br />
-							14
-							<span class="knex-icon connector-yellow" title="yellow"></span>
-						<br />
-							48
-							<span class="knex-icon connector-blue" title="blue"></span>
-						<br />
-							3
-							<span class="knex-icon connector-white" title="white"></span>
-						<br />
-							36
-							<span class="knex-icon connector-purple" title="purple"></span>
-						<br />
-				</div>
-				<div class="col-md-4" style="text-align: right; padding: 0 5px">
-							1
-							<span class="knex-icon other-smallhub" title="small hub"></span>
-						<br />
-							3
-							<span class="knex-icon other-washer" title="washer"></span>
-						<br />
-							2
-							<span class="knex-icon other-joint" title="joint"></span>
-						<br />
-				</div>
-			</div>
-				<div class="row" style="margin-bottom: -15px; margin-top: 15px;">
-					<img style="width: 100%" src="3.top/1.inside/2.front/parts.jpg" />
-				</div>
-		</div>
-	</section>
 			<h4 class="media-heading">front</h4>
 
-	<div class="media">
-		<a class="pull-left" href="3.top/1.inside/2.front/1.jpg">
-			<div class="media-object" style="width: 64px; height: 64px; background: gray url(3.top/1.inside/2.front/1.thumb.jpg) center; background-size: cover"></div>
-		</a>
+	<div class="media panel" id="top-inside-front-1">
+
+			<a href="3.top/1.inside/2.front/1.jpg">
+				<img src="3.top/1.inside/2.front/1.medium.jpg" class="img-responsive"/>
+			</a>
 		<div class="media-body">
 			<h4 class="media-heading"></h4>
 
 		</div>
 	</div>
-	<div class="media">
-		<a class="pull-left" href="3.top/1.inside/2.front/2.jpg">
-			<div class="media-object" style="width: 64px; height: 64px; background: gray url(3.top/1.inside/2.front/2.thumb.jpg) center; background-size: cover"></div>
-		</a>
+	<div class="media panel" id="top-inside-front-2">
+
+			<a href="3.top/1.inside/2.front/2.jpg">
+				<img src="3.top/1.inside/2.front/2.medium.jpg" class="img-responsive"/>
+			</a>
 		<div class="media-body">
 			<h4 class="media-heading"></h4>
 
@@ -1119,86 +1084,29 @@
 	</div>
 		</div>
 	</div>
-	<div class="media">
-		<a class="pull-left" >
-			<div class="media-object" style="width: 64px; height: 64px; background: gray url(3.top/1.inside/3.back/2.thumb.jpg) center; background-size: cover"></div>
-		</a>
+	<div class="media panel" id="top-inside-back">
+
+			<a class="pull-left" href="3.top/1.inside/3.back/1.jpg">
+				<div class="media-object" style="width: 64px; height: 64px; background: gray url(3.top/1.inside/3.back/2.thumb.jpg) center; background-size: cover"></div>
+			</a>
 		<div class="media-body">
-	<section class="panel panel-default pull-right parts-panel">
-		<div class="panel-body" style="white-space: nowrap">
-			<div class="row">
-				<div class="col-md-4" style="text-align: right; padding: 0 5px">
-							25
-							<span class="knex-icon rod-green" title="green"></span>
-						<br />
-							24
-							<span class="knex-icon rod-blue" title="blue"></span>
-						<br />
-							15
-							<span class="knex-icon rod-yellow" title="yellow"></span>
-						<br />
-							9
-							<span class="knex-icon rod-red" title="red"></span>
-						<br />
-							9
-							<span class="knex-icon rod-orange" title="orange"></span>
-						<br />
-							3
-							<span class="knex-icon rod-redtan" title="red (tan)"></span>
-						<br />
-							1
-							<span class="knex-icon rod-gray" title="gray"></span>
-						<br />
-				</div>
-				<div class="col-md-4" style="text-align: right; padding: 0 5px">
-							4
-							<span class="knex-icon connector-gray" title="gray"></span>
-						<br />
-							2
-							<span class="knex-icon connector-orange" title="orange"></span>
-						<br />
-							1
-							<span class="knex-icon connector-red" title="red"></span>
-						<br />
-							7
-							<span class="knex-icon connector-green" title="green"></span>
-						<br />
-							8
-							<span class="knex-icon connector-yellow" title="yellow"></span>
-						<br />
-							21
-							<span class="knex-icon connector-blue" title="blue"></span>
-						<br />
-							2
-							<span class="knex-icon connector-white" title="white"></span>
-						<br />
-							25
-							<span class="knex-icon connector-purple" title="purple"></span>
-						<br />
-				</div>
-				<div class="col-md-4" style="text-align: right; padding: 0 5px">
-				</div>
-			</div>
-				<div class="row" style="margin-bottom: -15px; margin-top: 15px;">
-					<img style="width: 100%" src="3.top/1.inside/3.back/parts.jpg" />
-				</div>
-		</div>
-	</section>
 			<h4 class="media-heading">back</h4>
 
-	<div class="media">
-		<a class="pull-left" href="3.top/1.inside/3.back/1.jpg">
-			<div class="media-object" style="width: 64px; height: 64px; background: gray url(3.top/1.inside/3.back/1.thumb.jpg) center; background-size: cover"></div>
-		</a>
+	<div class="media panel" id="top-inside-back-1">
+
+			<a href="3.top/1.inside/3.back/1.jpg">
+				<img src="3.top/1.inside/3.back/1.medium.jpg" class="img-responsive"/>
+			</a>
 		<div class="media-body">
 			<h4 class="media-heading"></h4>
 
 		</div>
 	</div>
-	<div class="media">
-		<a class="pull-left" href="3.top/1.inside/3.back/2.jpg">
-			<div class="media-object" style="width: 64px; height: 64px; background: gray url(3.top/1.inside/3.back/2.thumb.jpg) center; background-size: cover"></div>
-		</a>
+	<div class="media panel" id="top-inside-back-2">
+
+			<a href="3.top/1.inside/3.back/2.jpg">
+				<img src="3.top/1.inside/3.back/2.medium.jpg" class="img-responsive"/>
+			</a>
 		<div class="media-body">
 			<h4 class="media-heading"></h4>
 
@@ -1206,83 +1114,39 @@
 	</div>
 		</div>
 	</div>
-	<div class="media">
-		<a class="pull-left" >
-			<div class="media-object" style="width: 64px; height: 64px; background: gray url(3.top/1.inside/4.channel/3.thumb.jpg) center; background-size: cover"></div>
-		</a>
+	<div class="media panel" id="top-inside-channel">
+
+			<a class="pull-left" href="3.top/1.inside/4.channel/1.jpg">
+				<div class="media-object" style="width: 64px; height: 64px; background: gray url(3.top/1.inside/4.channel/3.thumb.jpg) center; background-size: cover"></div>
+			</a>
 		<div class="media-body">
-	<section class="panel panel-default pull-right parts-panel">
-		<div class="panel-body" style="white-space: nowrap">
-			<div class="row">
-				<div class="col-md-4" style="text-align: right; padding: 0 5px">
-							42
-							<span class="knex-icon rod-green" title="green"></span>
-						<br />
-							18
-							<span class="knex-icon rod-white" title="white"></span>
-						<br />
-							4
-							<span class="knex-icon rod-blue" title="blue"></span>
-						<br />
-							2
-							<span class="knex-icon rod-yellow" title="yellow"></span>
-						<br />
-				</div>
-				<div class="col-md-4" style="text-align: right; padding: 0 5px">
-							4
-							<span class="knex-icon connector-gray" title="gray"></span>
-						<br />
-							1
-							<span class="knex-icon connector-orange" title="orange"></span>
-						<br />
-							3
-							<span class="knex-icon connector-red" title="red"></span>
-						<br />
-							2
-							<span class="knex-icon connector-green" title="green"></span>
-						<br />
-							16
-							<span class="knex-icon connector-yellow" title="yellow"></span>
-						<br />
-							2
-							<span class="knex-icon connector-white" title="white"></span>
-						<br />
-							16
-							<span class="knex-icon connector-purple" title="purple"></span>
-						<br />
-				</div>
-				<div class="col-md-4" style="text-align: right; padding: 0 5px">
-				</div>
-			</div>
-				<div class="row" style="margin-bottom: -15px; margin-top: 15px;">
-					<img style="width: 100%" src="3.top/1.inside/4.channel/parts.jpg" />
-				</div>
-		</div>
-	</section>
 			<h4 class="media-heading">channel</h4>
 
-	<div class="media">
-		<a class="pull-left" href="3.top/1.inside/4.channel/1.jpg">
-			<div class="media-object" style="width: 64px; height: 64px; background: gray url(3.top/1.inside/4.channel/1.thumb.jpg) center; background-size: cover"></div>
-		</a>
+	<div class="media panel" id="top-inside-channel-1">
+
+			<a href="3.top/1.inside/4.channel/1.jpg">
+				<img src="3.top/1.inside/4.channel/1.medium.jpg" class="img-responsive"/>
+			</a>
 		<div class="media-body">
 			<h4 class="media-heading"></h4>
 
 		</div>
 	</div>
-	<div class="media">
-		<a class="pull-left" href="3.top/1.inside/4.channel/2.jpg">
-			<div class="media-object" style="width: 64px; height: 64px; background: gray url(3.top/1.inside/4.channel/2.thumb.jpg) center; background-size: cover"></div>
-		</a>
+	<div class="media panel" id="top-inside-channel-2">
+
+			<a href="3.top/1.inside/4.channel/2.jpg">
+				<img src="3.top/1.inside/4.channel/2.medium.jpg" class="img-responsive"/>
+			</a>
 		<div class="media-body">
 			<h4 class="media-heading"></h4>
 
 		</div>
 	</div>
-	<div class="media">
-		<a class="pull-left" href="3.top/1.inside/4.channel/3.jpg">
-			<div class="media-object" style="width: 64px; height: 64px; background: gray url(3.top/1.inside/4.channel/3.thumb.jpg) center; background-size: cover"></div>
-		</a>
+	<div class="media panel" id="top-inside-channel-3">
+
+			<a href="3.top/1.inside/4.channel/3.jpg">
+				<img src="3.top/1.inside/4.channel/3.medium.jpg" class="img-responsive"/>
+			</a>
 		<div class="media-body">
 			<h4 class="media-heading"></h4>
 
@@ -1290,104 +1154,39 @@
 	</div>
 		</div>
 	</div>
-	<div class="media">
-		<a class="pull-left" >
-			<div class="media-object" style="width: 64px; height: 64px; background: gray url(3.top/1.inside/5.right/3.thumb.JPG) center; background-size: cover"></div>
-		</a>
+	<div class="media panel" id="top-inside-right">
+
+			<a class="pull-left" href="3.top/1.inside/5.right/1.jpg">
+				<div class="media-object" style="width: 64px; height: 64px; background: gray url(3.top/1.inside/5.right/3.thumb.JPG) center; background-size: cover"></div>
+			</a>
 		<div class="media-body">
-	<section class="panel panel-default pull-right parts-panel">
-		<div class="panel-body" style="white-space: nowrap">
-			<div class="row">
-				<div class="col-md-4" style="text-align: right; padding: 0 5px">
-							97
-							<span class="knex-icon rod-green" title="green"></span>
-						<br />
-							46
-							<span class="knex-icon rod-white" title="white"></span>
-						<br />
-							28
-							<span class="knex-icon rod-blue" title="blue"></span>
-						<br />
-							18
-							<span class="knex-icon rod-yellow" title="yellow"></span>
-						<br />
-							11
-							<span class="knex-icon rod-red" title="red"></span>
-						<br />
-							8
-							<span class="knex-icon rod-orange" title="orange"></span>
-						<br />
-							1
-							<span class="knex-icon rod-grayblack" title="gray (black)"></span>
-						<br />
-				</div>
-				<div class="col-md-4" style="text-align: right; padding: 0 5px">
-							1
-							<span class="knex-icon connector-tan" title="tan"></span>
-						<br />
-							18
-							<span class="knex-icon connector-gray" title="gray"></span>
-						<br />
-							9
-							<span class="knex-icon connector-orange" title="orange"></span>
-						<br />
-							2
-							<span class="knex-icon connector-ltgray" title="lt. gray"></span>
-						<br />
-							12
-							<span class="knex-icon connector-red" title="red"></span>
-						<br />
-							13
-							<span class="knex-icon connector-green" title="green"></span>
-						<br />
-							26
-							<span class="knex-icon connector-yellow" title="yellow"></span>
-						<br />
-							10
-							<span class="knex-icon connector-blue" title="blue"></span>
-						<br />
-							9
-							<span class="knex-icon connector-white" title="white"></span>
-						<br />
-							57
-							<span class="knex-icon connector-purple" title="purple"></span>
-						<br />
-							5
-							<span class="knex-icon connector-bluemetallic" title="blue (metallic)"></span>
-						<br />
-				</div>
-				<div class="col-md-4" style="text-align: right; padding: 0 5px">
-				</div>
-			</div>
-				<div class="row" style="margin-bottom: -15px; margin-top: 15px;">
-					<img style="width: 100%" src="3.top/1.inside/5.right/parts.jpg" />
-				</div>
-		</div>
-	</section>
 			<h4 class="media-heading">right</h4>
 
-	<div class="media">
-		<a class="pull-left" href="3.top/1.inside/5.right/1.jpg">
-			<div class="media-object" style="width: 64px; height: 64px; background: gray url(3.top/1.inside/5.right/1.thumb.jpg) center; background-size: cover"></div>
-		</a>
+	<div class="media panel" id="top-inside-right-1">
+
+			<a href="3.top/1.inside/5.right/1.jpg">
+				<img src="3.top/1.inside/5.right/1.medium.jpg" class="img-responsive"/>
+			</a>
 		<div class="media-body">
 			<h4 class="media-heading"></h4>
 
 		</div>
 	</div>
-	<div class="media">
-		<a class="pull-left" href="3.top/1.inside/5.right/2.jpg">
-			<div class="media-object" style="width: 64px; height: 64px; background: gray url(3.top/1.inside/5.right/2.thumb.jpg) center; background-size: cover"></div>
-		</a>
+	<div class="media panel" id="top-inside-right-2">
+
+			<a href="3.top/1.inside/5.right/2.jpg">
+				<img src="3.top/1.inside/5.right/2.medium.jpg" class="img-responsive"/>
+			</a>
 		<div class="media-body">
 			<h4 class="media-heading"></h4>
 
 		</div>
 	</div>
-	<div class="media">
-		<a class="pull-left" href="3.top/1.inside/5.right/3.JPG">
-			<div class="media-object" style="width: 64px; height: 64px; background: gray url(3.top/1.inside/5.right/3.thumb.JPG) center; background-size: cover"></div>
-		</a>
+	<div class="media panel" id="top-inside-right-3">
+
+			<a href="3.top/1.inside/5.right/3.JPG">
+				<img src="3.top/1.inside/5.right/3.medium.JPG" class="img-responsive"/>
+			</a>
 		<div class="media-body">
 			<h4 class="media-heading"></h4>
 
@@ -1395,83 +1194,39 @@
 	</div>
 		</div>
 	</div>
-	<div class="media">
-		<a class="pull-left" >
-			<div class="media-object" style="width: 64px; height: 64px; background: gray url(3.top/1.inside/6.left/3.thumb.jpg) center; background-size: cover"></div>
-		</a>
+	<div class="media panel" id="top-inside-left">
+
+			<a class="pull-left" href="3.top/1.inside/6.left/1.jpg">
+				<div class="media-object" style="width: 64px; height: 64px; background: gray url(3.top/1.inside/6.left/3.thumb.jpg) center; background-size: cover"></div>
+			</a>
 		<div class="media-body">
-	<section class="panel panel-default pull-right parts-panel">
-		<div class="panel-body" style="white-space: nowrap">
-			<div class="row">
-				<div class="col-md-4" style="text-align: right; padding: 0 5px">
-							17
-							<span class="knex-icon rod-green" title="green"></span>
-						<br />
-							14
-							<span class="knex-icon rod-blue" title="blue"></span>
-						<br />
-							13
-							<span class="knex-icon rod-yellow" title="yellow"></span>
-						<br />
-							11
-							<span class="knex-icon rod-red" title="red"></span>
-						<br />
-							8
-							<span class="knex-icon rod-orange" title="orange"></span>
-						<br />
-				</div>
-				<div class="col-md-4" style="text-align: right; padding: 0 5px">
-							3
-							<span class="knex-icon connector-gray" title="gray"></span>
-						<br />
-							7
-							<span class="knex-icon connector-green" title="green"></span>
-						<br />
-							5
-							<span class="knex-icon connector-yellow" title="yellow"></span>
-						<br />
-							6
-							<span class="knex-icon connector-blue" title="blue"></span>
-						<br />
-							5
-							<span class="knex-icon connector-white" title="white"></span>
-						<br />
-							20
-							<span class="knex-icon connector-purple" title="purple"></span>
-						<br />
-				</div>
-				<div class="col-md-4" style="text-align: right; padding: 0 5px">
-				</div>
-			</div>
-				<div class="row" style="margin-bottom: -15px; margin-top: 15px;">
-					<img style="width: 100%" src="3.top/1.inside/6.left/parts.jpg" />
-				</div>
-		</div>
-	</section>
 			<h4 class="media-heading">left</h4>
 
-	<div class="media">
-		<a class="pull-left" href="3.top/1.inside/6.left/1.jpg">
-			<div class="media-object" style="width: 64px; height: 64px; background: gray url(3.top/1.inside/6.left/1.thumb.jpg) center; background-size: cover"></div>
-		</a>
+	<div class="media panel" id="top-inside-left-1">
+
+			<a href="3.top/1.inside/6.left/1.jpg">
+				<img src="3.top/1.inside/6.left/1.medium.jpg" class="img-responsive"/>
+			</a>
 		<div class="media-body">
 			<h4 class="media-heading"></h4>
 
 		</div>
 	</div>
-	<div class="media">
-		<a class="pull-left" href="3.top/1.inside/6.left/2.jpg">
-			<div class="media-object" style="width: 64px; height: 64px; background: gray url(3.top/1.inside/6.left/2.thumb.jpg) center; background-size: cover"></div>
-		</a>
+	<div class="media panel" id="top-inside-left-2">
+
+			<a href="3.top/1.inside/6.left/2.jpg">
+				<img src="3.top/1.inside/6.left/2.medium.jpg" class="img-responsive"/>
+			</a>
 		<div class="media-body">
 			<h4 class="media-heading"></h4>
 
 		</div>
 	</div>
-	<div class="media">
-		<a class="pull-left" href="3.top/1.inside/6.left/3.jpg">
-			<div class="media-object" style="width: 64px; height: 64px; background: gray url(3.top/1.inside/6.left/3.thumb.jpg) center; background-size: cover"></div>
-		</a>
+	<div class="media panel" id="top-inside-left-3">
+
+			<a href="3.top/1.inside/6.left/3.jpg">
+				<img src="3.top/1.inside/6.left/3.medium.jpg" class="img-responsive"/>
+			</a>
 		<div class="media-body">
 			<h4 class="media-heading"></h4>
 
@@ -1479,80 +1234,39 @@
 	</div>
 		</div>
 	</div>
-	<div class="media">
-		<a class="pull-left" >
-			<div class="media-object" style="width: 64px; height: 64px; background: gray url(3.top/1.inside/7.face/3.thumb.jpg) center; background-size: cover"></div>
-		</a>
+	<div class="media panel" id="top-inside-face">
+
+			<a class="pull-left" href="3.top/1.inside/7.face/1.jpg">
+				<div class="media-object" style="width: 64px; height: 64px; background: gray url(3.top/1.inside/7.face/3.thumb.jpg) center; background-size: cover"></div>
+			</a>
 		<div class="media-body">
-	<section class="panel panel-default pull-right parts-panel">
-		<div class="panel-body" style="white-space: nowrap">
-			<div class="row">
-				<div class="col-md-4" style="text-align: right; padding: 0 5px">
-							124
-							<span class="knex-icon rod-green" title="green"></span>
-						<br />
-							11
-							<span class="knex-icon rod-white" title="white"></span>
-						<br />
-							15
-							<span class="knex-icon rod-blue" title="blue"></span>
-						<br />
-							1
-							<span class="knex-icon rod-whiteblack" title="white (black)"></span>
-						<br />
-				</div>
-				<div class="col-md-4" style="text-align: right; padding: 0 5px">
-							11
-							<span class="knex-icon connector-tan" title="tan"></span>
-						<br />
-							2
-							<span class="knex-icon connector-green" title="green"></span>
-						<br />
-							41
-							<span class="knex-icon connector-blue" title="blue"></span>
-						<br />
-							11
-							<span class="knex-icon connector-white" title="white"></span>
-						<br />
-							2
-							<span class="knex-icon connector-purple" title="purple"></span>
-						<br />
-							27
-							<span class="knex-icon connector-bluemetallic" title="blue (metallic)"></span>
-						<br />
-				</div>
-				<div class="col-md-4" style="text-align: right; padding: 0 5px">
-				</div>
-			</div>
-				<div class="row" style="margin-bottom: -15px; margin-top: 15px;">
-					<img style="width: 100%" src="3.top/1.inside/7.face/parts.jpg" />
-				</div>
-		</div>
-	</section>
 			<h4 class="media-heading">face</h4>
 
-	<div class="media">
-		<a class="pull-left" href="3.top/1.inside/7.face/1.jpg">
-			<div class="media-object" style="width: 64px; height: 64px; background: gray url(3.top/1.inside/7.face/1.thumb.jpg) center; background-size: cover"></div>
-		</a>
+	<div class="media panel" id="top-inside-face-1">
+
+			<a href="3.top/1.inside/7.face/1.jpg">
+				<img src="3.top/1.inside/7.face/1.medium.jpg" class="img-responsive"/>
+			</a>
 		<div class="media-body">
 			<h4 class="media-heading"></h4>
 
 		</div>
 	</div>
-	<div class="media">
-		<a class="pull-left" href="3.top/1.inside/7.face/2.jpg">
-			<div class="media-object" style="width: 64px; height: 64px; background: gray url(3.top/1.inside/7.face/2.thumb.jpg) center; background-size: cover"></div>
-		</a>
+	<div class="media panel" id="top-inside-face-2">
+
+			<a href="3.top/1.inside/7.face/2.jpg">
+				<img src="3.top/1.inside/7.face/2.medium.jpg" class="img-responsive"/>
+			</a>
 		<div class="media-body">
 			<h4 class="media-heading"></h4>
 
 		</div>
 	</div>
-	<div class="media">
-		<a class="pull-left" href="3.top/1.inside/7.face/3.jpg">
-			<div class="media-object" style="width: 64px; height: 64px; background: gray url(3.top/1.inside/7.face/3.thumb.jpg) center; background-size: cover"></div>
-		</a>
+	<div class="media panel" id="top-inside-face-3">
+
+			<a href="3.top/1.inside/7.face/3.jpg">
+				<img src="3.top/1.inside/7.face/3.medium.jpg" class="img-responsive"/>
+			</a>
 		<div class="media-body">
 			<h4 class="media-heading"></h4>
 
@@ -1560,41 +1274,51 @@
 	</div>
 		</div>
 	</div>
-	<div class="media">
-		<a class="pull-left" >
-			<div class="media-object" style="width: 64px; height: 64px; background: gray url(3.top/1.inside/8.hands/1.thumb.jpg) center; background-size: cover"></div>
-		</a>
+	<div class="media panel" id="top-inside-hands">
+
+			<a href="3.top/1.inside/8.hands/1.jpg">
+				<img src="3.top/1.inside/8.hands/1.medium.jpg" class="img-responsive"/>
+			</a>
 		<div class="media-body">
-	<section class="panel panel-default pull-right parts-panel">
-		<div class="panel-body" style="white-space: nowrap">
-			<div class="row">
-				<div class="col-md-4" style="text-align: right; padding: 0 5px">
-							1
-							<span class="knex-icon rod-green" title="green"></span>
-						<br />
-							3
-							<span class="knex-icon rod-white" title="white"></span>
-						<br />
-				</div>
-				<div class="col-md-4" style="text-align: right; padding: 0 5px">
-							3
-							<span class="knex-icon connector-orange" title="orange"></span>
-						<br />
-							2
-							<span class="knex-icon connector-red" title="red"></span>
-						<br />
-				</div>
-				<div class="col-md-4" style="text-align: right; padding: 0 5px">
-				</div>
-			</div>
-		</div>
-	</section>
 			<h4 class="media-heading">hands</h4>
 
-	<div class="media">
-		<a class="pull-left" href="3.top/1.inside/8.hands/1.jpg">
-			<div class="media-object" style="width: 64px; height: 64px; background: gray url(3.top/1.inside/8.hands/1.thumb.jpg) center; background-size: cover"></div>
-		</a>
+		</div>
+	</div>
+	<div class="media panel" id="top-inside-10">
+
+			<a href="3.top/1.inside/10.jpg">
+				<img src="3.top/1.inside/10.medium.jpg" class="img-responsive"/>
+			</a>
+		<div class="media-body">
+			<h4 class="media-heading"></h4>
+
+		</div>
+	</div>
+	<div class="media panel" id="top-inside-11">
+
+			<a href="3.top/1.inside/11.jpg">
+				<img src="3.top/1.inside/11.medium.jpg" class="img-responsive"/>
+			</a>
+		<div class="media-body">
+			<h4 class="media-heading"></h4>
+
+		</div>
+	</div>
+	<div class="media panel" id="top-inside-12">
+
+			<a href="3.top/1.inside/12.jpg">
+				<img src="3.top/1.inside/12.medium.jpg" class="img-responsive"/>
+			</a>
+		<div class="media-body">
+			<h4 class="media-heading"></h4>
+
+		</div>
+	</div>
+	<div class="media panel" id="top-inside-13">
+
+			<a href="3.top/1.inside/13.jpg">
+				<img src="3.top/1.inside/13.medium.jpg" class="img-responsive"/>
+			</a>
 		<div class="media-body">
 			<h4 class="media-heading"></h4>
 
@@ -1602,176 +1326,39 @@
 	</div>
 		</div>
 	</div>
-	<div class="media">
-		<a class="pull-left" href="3.top/1.inside/10.jpg">
-			<div class="media-object" style="width: 64px; height: 64px; background: gray url(3.top/1.inside/10.thumb.jpg) center; background-size: cover"></div>
-		</a>
-		<div class="media-body">
-			<h4 class="media-heading"></h4>
+	<div class="media panel" id="top-roof">
 
-		</div>
-	</div>
-	<div class="media">
-		<a class="pull-left" href="3.top/1.inside/11.jpg">
-			<div class="media-object" style="width: 64px; height: 64px; background: gray url(3.top/1.inside/11.thumb.jpg) center; background-size: cover"></div>
-		</a>
-		<div class="media-body">
-			<h4 class="media-heading"></h4>
-
-		</div>
-	</div>
-	<div class="media">
-		<a class="pull-left" href="3.top/1.inside/12.jpg">
-			<div class="media-object" style="width: 64px; height: 64px; background: gray url(3.top/1.inside/12.thumb.jpg) center; background-size: cover"></div>
-		</a>
-		<div class="media-body">
-			<h4 class="media-heading"></h4>
-
-		</div>
-	</div>
-	<div class="media">
-		<a class="pull-left" href="3.top/1.inside/13.jpg">
-			<div class="media-object" style="width: 64px; height: 64px; background: gray url(3.top/1.inside/13.thumb.jpg) center; background-size: cover"></div>
-		</a>
-		<div class="media-body">
-			<h4 class="media-heading"></h4>
-
-		</div>
-	</div>
-		</div>
-	</div>
-	<div class="media">
-		<a class="pull-left" >
-			<div class="media-object" style="width: 64px; height: 64px; background: gray url(3.top/2.roof/3.thumb.jpg) center; background-size: cover"></div>
-		</a>
+			<a class="pull-left" href="3.top/2.roof/1.front/1.jpg">
+				<div class="media-object" style="width: 64px; height: 64px; background: gray url(3.top/2.roof/3.thumb.jpg) center; background-size: cover"></div>
+			</a>
 		<div class="media-body">
 			<h4 class="media-heading">roof</h4>
 
-	<div class="media">
-		<a class="pull-left" >
-			<div class="media-object" style="width: 64px; height: 64px; background: gray url(3.top/2.roof/1.front/1.thumb.jpg) center; background-size: cover"></div>
-		</a>
+	<div class="media panel" id="top-roof-front">
+
+			<a href="3.top/2.roof/1.front/1.jpg">
+				<img src="3.top/2.roof/1.front/1.medium.jpg" class="img-responsive"/>
+			</a>
 		<div class="media-body">
-	<section class="panel panel-default pull-right parts-panel">
-		<div class="panel-body" style="white-space: nowrap">
-			<div class="row">
-				<div class="col-md-4" style="text-align: right; padding: 0 5px">
-							121
-							<span class="knex-icon rod-green" title="green"></span>
-						<br />
-							22
-							<span class="knex-icon rod-white" title="white"></span>
-						<br />
-							14
-							<span class="knex-icon rod-blue" title="blue"></span>
-						<br />
-				</div>
-				<div class="col-md-4" style="text-align: right; padding: 0 5px">
-							3
-							<span class="knex-icon connector-tan" title="tan"></span>
-						<br />
-							1
-							<span class="knex-icon connector-orange" title="orange"></span>
-						<br />
-							2
-							<span class="knex-icon connector-red" title="red"></span>
-						<br />
-							12
-							<span class="knex-icon connector-yellow" title="yellow"></span>
-						<br />
-							23
-							<span class="knex-icon connector-blue" title="blue"></span>
-						<br />
-							17
-							<span class="knex-icon connector-white" title="white"></span>
-						<br />
-							44
-							<span class="knex-icon connector-purple" title="purple"></span>
-						<br />
-				</div>
-				<div class="col-md-4" style="text-align: right; padding: 0 5px">
-				</div>
-			</div>
-				<div class="row" style="margin-bottom: -15px; margin-top: 15px;">
-					<img style="width: 100%" src="3.top/2.roof/1.front/parts.jpg" />
-				</div>
-		</div>
-	</section>
 			<h4 class="media-heading">front</h4>
 
-	<div class="media">
-		<a class="pull-left" href="3.top/2.roof/1.front/1.jpg">
-			<div class="media-object" style="width: 64px; height: 64px; background: gray url(3.top/2.roof/1.front/1.thumb.jpg) center; background-size: cover"></div>
-		</a>
-		<div class="media-body">
-			<h4 class="media-heading"></h4>
+		</div>
+	</div>
+	<div class="media panel" id="top-roof-top">
 
-		</div>
-	</div>
-		</div>
-	</div>
-	<div class="media">
-		<a class="pull-left" >
-			<div class="media-object" style="width: 64px; height: 64px; background: gray url(3.top/2.roof/2.top/1.thumb.jpg) center; background-size: cover"></div>
-		</a>
+			<a href="3.top/2.roof/2.top/1.jpg">
+				<img src="3.top/2.roof/2.top/1.medium.jpg" class="img-responsive"/>
+			</a>
 		<div class="media-body">
-	<section class="panel panel-default pull-right parts-panel">
-		<div class="panel-body" style="white-space: nowrap">
-			<div class="row">
-				<div class="col-md-4" style="text-align: right; padding: 0 5px">
-							54
-							<span class="knex-icon rod-green" title="green"></span>
-						<br />
-							3
-							<span class="knex-icon rod-blue" title="blue"></span>
-						<br />
-							68
-							<span class="knex-icon rod-yellow" title="yellow"></span>
-						<br />
-							14
-							<span class="knex-icon rod-red" title="red"></span>
-						<br />
-							17
-							<span class="knex-icon rod-orange" title="orange"></span>
-						<br />
-							6
-							<span class="knex-icon rod-gray" title="gray"></span>
-						<br />
-				</div>
-				<div class="col-md-4" style="text-align: right; padding: 0 5px">
-							6
-							<span class="knex-icon connector-gray" title="gray"></span>
-						<br />
-							10
-							<span class="knex-icon connector-red" title="red"></span>
-						<br />
-							13
-							<span class="knex-icon connector-green" title="green"></span>
-						<br />
-							1
-							<span class="knex-icon connector-yellow" title="yellow"></span>
-						<br />
-							6
-							<span class="knex-icon connector-blue" title="blue"></span>
-						<br />
-							42
-							<span class="knex-icon connector-white" title="white"></span>
-						<br />
-							31
-							<span class="knex-icon connector-purple" title="purple"></span>
-						<br />
-				</div>
-				<div class="col-md-4" style="text-align: right; padding: 0 5px">
-				</div>
-			</div>
-		</div>
-	</section>
 			<h4 class="media-heading">top</h4>
 
-	<div class="media">
-		<a class="pull-left" href="3.top/2.roof/2.top/1.jpg">
-			<div class="media-object" style="width: 64px; height: 64px; background: gray url(3.top/2.roof/2.top/1.thumb.jpg) center; background-size: cover"></div>
-		</a>
+		</div>
+	</div>
+	<div class="media panel" id="top-roof-3">
+
+			<a href="3.top/2.roof/3.jpg">
+				<img src="3.top/2.roof/3.medium.jpg" class="img-responsive"/>
+			</a>
 		<div class="media-body">
 			<h4 class="media-heading"></h4>
 
@@ -1779,10 +1366,41 @@
 	</div>
 		</div>
 	</div>
-	<div class="media">
-		<a class="pull-left" href="3.top/2.roof/3.jpg">
-			<div class="media-object" style="width: 64px; height: 64px; background: gray url(3.top/2.roof/3.thumb.jpg) center; background-size: cover"></div>
-		</a>
+	<div class="media panel" id="top-3">
+
+			<a href="3.top/3.jpg">
+				<img src="3.top/3.medium.jpg" class="img-responsive"/>
+			</a>
+		<div class="media-body">
+			<h4 class="media-heading"></h4>
+
+		</div>
+	</div>
+	<div class="media panel" id="top-4">
+
+			<a href="3.top/4.jpg">
+				<img src="3.top/4.medium.jpg" class="img-responsive"/>
+			</a>
+		<div class="media-body">
+			<h4 class="media-heading"></h4>
+
+		</div>
+	</div>
+	<div class="media panel" id="top-5">
+
+			<a href="3.top/5.jpg">
+				<img src="3.top/5.medium.jpg" class="img-responsive"/>
+			</a>
+		<div class="media-body">
+			<h4 class="media-heading"></h4>
+
+		</div>
+	</div>
+	<div class="media panel" id="top-6">
+
+			<a href="3.top/6.jpg">
+				<img src="3.top/6.medium.jpg" class="img-responsive"/>
+			</a>
 		<div class="media-body">
 			<h4 class="media-heading"></h4>
 
@@ -1790,112 +1408,39 @@
 	</div>
 		</div>
 	</div>
-	<div class="media">
-		<a class="pull-left" href="3.top/3.jpg">
-			<div class="media-object" style="width: 64px; height: 64px; background: gray url(3.top/3.thumb.jpg) center; background-size: cover"></div>
-		</a>
-		<div class="media-body">
-			<h4 class="media-heading"></h4>
+	<div class="media panel" id="pendulum">
 
-		</div>
-	</div>
-	<div class="media">
-		<a class="pull-left" href="3.top/4.jpg">
-			<div class="media-object" style="width: 64px; height: 64px; background: gray url(3.top/4.thumb.jpg) center; background-size: cover"></div>
-		</a>
+			<a class="pull-left" href="4.pendulum/1.jpg">
+				<div class="media-object" style="width: 64px; height: 64px; background: gray url(4.pendulum/3.thumb.jpg) center; background-size: cover"></div>
+			</a>
 		<div class="media-body">
-			<h4 class="media-heading"></h4>
-
-		</div>
-	</div>
-	<div class="media">
-		<a class="pull-left" href="3.top/5.jpg">
-			<div class="media-object" style="width: 64px; height: 64px; background: gray url(3.top/5.thumb.jpg) center; background-size: cover"></div>
-		</a>
-		<div class="media-body">
-			<h4 class="media-heading"></h4>
-
-		</div>
-	</div>
-	<div class="media">
-		<a class="pull-left" href="3.top/6.jpg">
-			<div class="media-object" style="width: 64px; height: 64px; background: gray url(3.top/6.thumb.jpg) center; background-size: cover"></div>
-		</a>
-		<div class="media-body">
-			<h4 class="media-heading"></h4>
-
-		</div>
-	</div>
-		</div>
-	</div>
-	<div class="media">
-		<a class="pull-left" >
-			<div class="media-object" style="width: 64px; height: 64px; background: gray url(4.pendulum/3.thumb.jpg) center; background-size: cover"></div>
-		</a>
-		<div class="media-body">
-	<section class="panel panel-default pull-right parts-panel">
-		<div class="panel-body" style="white-space: nowrap">
-			<div class="row">
-				<div class="col-md-4" style="text-align: right; padding: 0 5px">
-							2
-							<span class="knex-icon rod-white" title="white"></span>
-						<br />
-							4
-							<span class="knex-icon rod-yellow" title="yellow"></span>
-						<br />
-							1
-							<span class="knex-icon rod-grayblack" title="gray (black)"></span>
-						<br />
-							16
-							<span class="knex-icon rod-gray" title="gray"></span>
-						<br />
-				</div>
-				<div class="col-md-4" style="text-align: right; padding: 0 5px">
-							1
-							<span class="knex-icon connector-tan" title="tan"></span>
-						<br />
-							6
-							<span class="knex-icon connector-white" title="white"></span>
-						<br />
-				</div>
-				<div class="col-md-4" style="text-align: right; padding: 0 5px">
-							2
-							<span class="knex-icon other-mediumtyre" title="medium tyre"></span>
-						<br />
-							2
-							<span class="knex-icon other-mediumhub" title="medium hub"></span>
-						<br />
-				</div>
-			</div>
-				<div class="row" style="margin-bottom: -15px; margin-top: 15px;">
-					<img style="width: 100%" src="4.pendulum/parts.jpg" />
-				</div>
-		</div>
-	</section>
 			<h4 class="media-heading">pendulum</h4>
 
-	<div class="media">
-		<a class="pull-left" href="4.pendulum/1.jpg">
-			<div class="media-object" style="width: 64px; height: 64px; background: gray url(4.pendulum/1.thumb.jpg) center; background-size: cover"></div>
-		</a>
+	<div class="media panel" id="pendulum-1">
+
+			<a href="4.pendulum/1.jpg">
+				<img src="4.pendulum/1.medium.jpg" class="img-responsive"/>
+			</a>
 		<div class="media-body">
 			<h4 class="media-heading"></h4>
 
 		</div>
 	</div>
-	<div class="media">
-		<a class="pull-left" href="4.pendulum/2.jpg">
-			<div class="media-object" style="width: 64px; height: 64px; background: gray url(4.pendulum/2.thumb.jpg) center; background-size: cover"></div>
-		</a>
+	<div class="media panel" id="pendulum-2">
+
+			<a href="4.pendulum/2.jpg">
+				<img src="4.pendulum/2.medium.jpg" class="img-responsive"/>
+			</a>
 		<div class="media-body">
 			<h4 class="media-heading"></h4>
 
 		</div>
 	</div>
-	<div class="media">
-		<a class="pull-left" href="4.pendulum/3.jpg">
-			<div class="media-object" style="width: 64px; height: 64px; background: gray url(4.pendulum/3.thumb.jpg) center; background-size: cover"></div>
-		</a>
+	<div class="media panel" id="pendulum-3">
+
+			<a href="4.pendulum/3.jpg">
+				<img src="4.pendulum/3.medium.jpg" class="img-responsive"/>
+			</a>
 		<div class="media-body">
 			<h4 class="media-heading"></h4>
 
@@ -1903,80 +1448,39 @@
 	</div>
 		</div>
 	</div>
-	<div class="media">
-		<a class="pull-left" >
-			<div class="media-object" style="width: 64px; height: 64px; background: gray url(5.weight/3.thumb.jpg) center; background-size: cover"></div>
-		</a>
+	<div class="media panel" id="weight">
+
+			<a class="pull-left" href="5.weight/1.jpg">
+				<div class="media-object" style="width: 64px; height: 64px; background: gray url(5.weight/3.thumb.jpg) center; background-size: cover"></div>
+			</a>
 		<div class="media-body">
-	<section class="panel panel-default pull-right parts-panel">
-		<div class="panel-body" style="white-space: nowrap">
-			<div class="row">
-				<div class="col-md-4" style="text-align: right; padding: 0 5px">
-							1
-							<span class="knex-icon rod-green" title="green"></span>
-						<br />
-							1
-							<span class="knex-icon rod-white" title="white"></span>
-						<br />
-							1
-							<span class="knex-icon rod-grayblack" title="gray (black)"></span>
-						<br />
-				</div>
-				<div class="col-md-4" style="text-align: right; padding: 0 5px">
-							4
-							<span class="knex-icon connector-tan" title="tan"></span>
-						<br />
-							1
-							<span class="knex-icon connector-red" title="red"></span>
-						<br />
-				</div>
-				<div class="col-md-4" style="text-align: right; padding: 0 5px">
-							9
-							<span class="knex-icon other-mediumtyre" title="medium tyre"></span>
-						<br />
-							8
-							<span class="knex-icon other-smallhub" title="small hub"></span>
-						<br />
-							8
-							<span class="knex-icon other-smalltyre" title="small tyre"></span>
-						<br />
-							137
-							<span class="knex-icon other-chain" title="chain"></span>
-						<br />
-							9
-							<span class="knex-icon other-mediumhub" title="medium hub"></span>
-						<br />
-				</div>
-			</div>
-				<div class="row" style="margin-bottom: -15px; margin-top: 15px;">
-					<img style="width: 100%" src="5.weight/parts.jpg" />
-				</div>
-		</div>
-	</section>
 			<h4 class="media-heading">weight</h4>
 
-	<div class="media">
-		<a class="pull-left" href="5.weight/1.jpg">
-			<div class="media-object" style="width: 64px; height: 64px; background: gray url(5.weight/1.thumb.jpg) center; background-size: cover"></div>
-		</a>
+	<div class="media panel" id="weight-1">
+
+			<a href="5.weight/1.jpg">
+				<img src="5.weight/1.medium.jpg" class="img-responsive"/>
+			</a>
 		<div class="media-body">
 			<h4 class="media-heading"></h4>
 
 		</div>
 	</div>
-	<div class="media">
-		<a class="pull-left" href="5.weight/2.chain.jpg">
-			<div class="media-object" style="width: 64px; height: 64px; background: gray url(5.weight/2.chain.thumb.jpg) center; background-size: cover"></div>
-		</a>
+	<div class="media panel" id="weight-chain">
+
+			<a href="5.weight/2.chain.jpg">
+				<img src="5.weight/2.chain.medium.jpg" class="img-responsive"/>
+			</a>
 		<div class="media-body">
 			<h4 class="media-heading">chain</h4>
 
 		</div>
 	</div>
-	<div class="media">
-		<a class="pull-left" href="5.weight/3.jpg">
-			<div class="media-object" style="width: 64px; height: 64px; background: gray url(5.weight/3.thumb.jpg) center; background-size: cover"></div>
-		</a>
+	<div class="media panel" id="weight-3">
+
+			<a href="5.weight/3.jpg">
+				<img src="5.weight/3.medium.jpg" class="img-responsive"/>
+			</a>
 		<div class="media-body">
 			<h4 class="media-heading"></h4>
 
@@ -1984,35 +1488,2310 @@
 	</div>
 		</div>
 	</div>
-	<div class="media">
-		<a class="pull-left" href="7.jpg">
-			<div class="media-object" style="width: 64px; height: 64px; background: gray url(7.thumb.jpg) center; background-size: cover"></div>
-		</a>
+	<div class="media panel" id="7">
+
+			<a href="7.jpg">
+				<img src="7.medium.jpg" class="img-responsive"/>
+			</a>
 		<div class="media-body">
 			<h4 class="media-heading"></h4>
 
 		</div>
 	</div>
-	<div class="media">
-		<a class="pull-left" href="8.jpg">
-			<div class="media-object" style="width: 64px; height: 64px; background: gray url(8.thumb.jpg) center; background-size: cover"></div>
-		</a>
+	<div class="media panel" id="8">
+
+			<a href="8.jpg">
+				<img src="8.medium.jpg" class="img-responsive"/>
+			</a>
 		<div class="media-body">
 			<h4 class="media-heading"></h4>
 
 		</div>
 	</div>
-	<div class="media">
-		<a class="pull-left" href="9.jpg">
-			<div class="media-object" style="width: 64px; height: 64px; background: gray url(9.thumb.jpg) center; background-size: cover"></div>
-		</a>
+	<div class="media panel" id="9">
+
+			<a href="9.jpg">
+				<img src="9.medium.jpg" class="img-responsive"/>
+			</a>
 		<div class="media-body">
 			<h4 class="media-heading"></h4>
 
 		</div>
 	</div>
-		</div>
+				</div>
+				<div class="col-md-3">
+					<div class="the-sidebar" >
+						<div class="row">
+							<div class="col-lg-8 col-md-6">
+								<ul class="nav">
+	<li >
+		<a href="#spiral">spiral</a>
+	</li>
+	<li >
+		<a href="#frame">frame</a>
+			<ul class="nav">
+	<li >
+		<a href="#frame-base">base</a>
+	</li>
+	<li >
+		<a href="#frame-tower">tower</a>
+			<ul class="nav">
+	<li >
+		<a href="#frame-tower-bottom">bottom</a>
+	</li>
+	<li >
+		<a href="#frame-tower-middle">middle</a>
+	</li>
+	<li >
+		<a href="#frame-tower-top">top</a>
+	</li>
+	<li style="display: none">
+		<a href="#frame-tower-4"></a>
+	</li>
+	<li style="display: none">
+		<a href="#frame-tower-5"></a>
+	</li>
+	<li style="display: none">
+		<a href="#frame-tower-6"></a>
+	</li>
+	<li style="display: none">
+		<a href="#frame-tower-7"></a>
+	</li>
+	<li style="display: none">
+		<a href="#frame-tower-8"></a>
+	</li>
+	<li style="display: none">
+		<a href="#frame-tower-9"></a>
+	</li>
+	<li style="display: none">
+		<a href="#frame-tower-10"></a>
+	</li>
+	<li style="display: none">
+		<a href="#frame-tower-11"></a>
+	</li>
+			</ul>
+	</li>
+			</ul>
+	</li>
+	<li >
+		<a href="#top">top</a>
+			<ul class="nav">
+	<li >
+		<a href="#top-inside">inside</a>
+			<ul class="nav">
+	<li >
+		<a href="#top-inside-mechanism">mechanism</a>
+	</li>
+	<li >
+		<a href="#top-inside-front">front</a>
+	</li>
+	<li >
+		<a href="#top-inside-back">back</a>
+	</li>
+	<li >
+		<a href="#top-inside-channel">channel</a>
+	</li>
+	<li >
+		<a href="#top-inside-right">right</a>
+	</li>
+	<li >
+		<a href="#top-inside-left">left</a>
+	</li>
+	<li >
+		<a href="#top-inside-face">face</a>
+	</li>
+	<li >
+		<a href="#top-inside-hands">hands</a>
+	</li>
+	<li style="display: none">
+		<a href="#top-inside-10"></a>
+	</li>
+	<li style="display: none">
+		<a href="#top-inside-11"></a>
+	</li>
+	<li style="display: none">
+		<a href="#top-inside-12"></a>
+	</li>
+	<li style="display: none">
+		<a href="#top-inside-13"></a>
+	</li>
+			</ul>
+	</li>
+	<li >
+		<a href="#top-roof">roof</a>
+			<ul class="nav">
+	<li >
+		<a href="#top-roof-front">front</a>
+	</li>
+	<li >
+		<a href="#top-roof-top">top</a>
+	</li>
+	<li style="display: none">
+		<a href="#top-roof-3"></a>
+	</li>
+			</ul>
+	</li>
+	<li style="display: none">
+		<a href="#top-3"></a>
+	</li>
+	<li style="display: none">
+		<a href="#top-4"></a>
+	</li>
+	<li style="display: none">
+		<a href="#top-5"></a>
+	</li>
+	<li style="display: none">
+		<a href="#top-6"></a>
+	</li>
+			</ul>
+	</li>
+	<li >
+		<a href="#pendulum">pendulum</a>
+	</li>
+	<li >
+		<a href="#weight">weight</a>
+			<ul class="nav">
+	<li style="display: none">
+		<a href="#weight-1"></a>
+	</li>
+	<li >
+		<a href="#weight-chain">chain</a>
+	</li>
+	<li style="display: none">
+		<a href="#weight-3"></a>
+	</li>
+			</ul>
+	</li>
+	<li style="display: none">
+		<a href="#7"></a>
+	</li>
+	<li style="display: none">
+		<a href="#8"></a>
+	</li>
+	<li style="display: none">
+		<a href="#9"></a>
+	</li>
+								</ul>
+							</div>
+							<div class="col-lg-4 col-md-6 part-lists">
+
+	<div data-partsfor="#spiral">
+	<div class="part-list">
+		<p>
+				<span class="part">
+					137
+					<span class="knex-icon rod-yellow" title="yellow"></span>
+				</span>
+				<span class="part">
+					136
+					<span class="knex-icon rod-red" title="red"></span>
+				</span>
+				<span class="part">
+					5
+					<span class="knex-icon rod-gray" title="gray"></span>
+				</span>
+		</p>
+		<p>
+				<span class="part">
+					5
+					<span class="knex-icon connector-tan" title="tan"></span>
+				</span>
+				<span class="part">
+					31
+					<span class="knex-icon connector-gray" title="gray"></span>
+				</span>
+				<span class="part">
+					2
+					<span class="knex-icon connector-ltgray" title="lt. gray"></span>
+				</span>
+				<span class="part">
+					73
+					<span class="knex-icon connector-red" title="red"></span>
+				</span>
+				<span class="part">
+					67
+					<span class="knex-icon connector-yellow" title="yellow"></span>
+				</span>
+		</p>
+		<p>
+		</p>
 	</div>
+
+	<!-- <section class="panel panel-default parts-panel">
+		<div class="panel-body" style="white-space: nowrap">
+				<div class="row" style="margin-bottom: -15px; margin-top: 15px;">
+					<img style="width: 100%" src="1.spiral/parts.jpg" />
+				</div>
+		</div>
+	</section> -->
+	</div>
+
+
+	<div data-partsfor="#spiral-1">
+	</div>
+
+
+
+	<div data-partsfor="#spiral-2">
+	</div>
+
+
+
+	<div data-partsfor="#spiral-3">
+	</div>
+
+
+
+
+	<div data-partsfor="#frame">
+	<div class="part-list">
+		<p>
+				<span class="part">
+					190
+					<span class="knex-icon rod-green" title="green"></span>
+				</span>
+				<span class="part">
+					109
+					<span class="knex-icon rod-white" title="white"></span>
+				</span>
+				<span class="part">
+					293
+					<span class="knex-icon rod-blue" title="blue"></span>
+				</span>
+				<span class="part">
+					119
+					<span class="knex-icon rod-yellow" title="yellow"></span>
+				</span>
+				<span class="part">
+					228
+					<span class="knex-icon rod-red" title="red"></span>
+				</span>
+				<span class="part">
+					34
+					<span class="knex-icon rod-gray" title="gray"></span>
+				</span>
+				<span class="part">
+					76
+					<span class="knex-icon rod-orange" title="orange"></span>
+				</span>
+		</p>
+		<p>
+				<span class="part">
+					1
+					<span class="knex-icon connector-tan" title="tan"></span>
+				</span>
+				<span class="part">
+					15
+					<span class="knex-icon connector-gray" title="gray"></span>
+				</span>
+				<span class="part">
+					93
+					<span class="knex-icon connector-orange" title="orange"></span>
+				</span>
+				<span class="part">
+					6
+					<span class="knex-icon connector-red" title="red"></span>
+				</span>
+				<span class="part">
+					68
+					<span class="knex-icon connector-green" title="green"></span>
+				</span>
+				<span class="part">
+					112
+					<span class="knex-icon connector-yellow" title="yellow"></span>
+				</span>
+				<span class="part">
+					146
+					<span class="knex-icon connector-blue" title="blue"></span>
+				</span>
+				<span class="part">
+					27
+					<span class="knex-icon connector-white" title="white"></span>
+				</span>
+				<span class="part">
+					270
+					<span class="knex-icon connector-purple" title="purple"></span>
+				</span>
+		</p>
+		<p>
+				<span class="part">
+					2
+					<span class="knex-icon other-redgear" title="red gear"></span>
+				</span>
+				<span class="part">
+					1
+					<span class="knex-icon other-mediumtyre" title="medium tyre"></span>
+				</span>
+				<span class="part">
+					2
+					<span class="knex-icon other-joint" title="joint"></span>
+				</span>
+				<span class="part">
+					3
+					<span class="knex-icon other-washer" title="washer"></span>
+				</span>
+				<span class="part">
+					1
+					<span class="knex-icon other-mediumhub" title="medium hub"></span>
+				</span>
+		</p>
+	</div>
+
+	<!-- <section class="panel panel-default parts-panel">
+		<div class="panel-body" style="white-space: nowrap">
+				<div class="row" style="margin-bottom: -15px; margin-top: 15px;">
+					<img style="width: 100%" src="2.frame/parts.jpg" />
+				</div>
+		</div>
+	</section> -->
+	</div>
+
+
+	<div data-partsfor="#frame-base">
+	<div class="part-list">
+		<p>
+				<span class="part">
+					140
+					<span class="knex-icon rod-green" title="green"></span>
+				</span>
+				<span class="part">
+					85
+					<span class="knex-icon rod-white" title="white"></span>
+				</span>
+				<span class="part">
+					202
+					<span class="knex-icon rod-blue" title="blue"></span>
+				</span>
+				<span class="part">
+					92
+					<span class="knex-icon rod-yellow" title="yellow"></span>
+				</span>
+				<span class="part">
+					98
+					<span class="knex-icon rod-red" title="red"></span>
+				</span>
+				<span class="part">
+					12
+					<span class="knex-icon rod-gray" title="gray"></span>
+				</span>
+				<span class="part">
+					6
+					<span class="knex-icon rod-orange" title="orange"></span>
+				</span>
+		</p>
+		<p>
+				<span class="part">
+					1
+					<span class="knex-icon connector-tan" title="tan"></span>
+				</span>
+				<span class="part">
+					12
+					<span class="knex-icon connector-gray" title="gray"></span>
+				</span>
+				<span class="part">
+					34
+					<span class="knex-icon connector-orange" title="orange"></span>
+				</span>
+				<span class="part">
+					6
+					<span class="knex-icon connector-red" title="red"></span>
+				</span>
+				<span class="part">
+					68
+					<span class="knex-icon connector-green" title="green"></span>
+				</span>
+				<span class="part">
+					70
+					<span class="knex-icon connector-yellow" title="yellow"></span>
+				</span>
+				<span class="part">
+					91
+					<span class="knex-icon connector-blue" title="blue"></span>
+				</span>
+				<span class="part">
+					24
+					<span class="knex-icon connector-white" title="white"></span>
+				</span>
+				<span class="part">
+					159
+					<span class="knex-icon connector-purple" title="purple"></span>
+				</span>
+		</p>
+		<p>
+				<span class="part">
+					2
+					<span class="knex-icon other-redgear" title="red gear"></span>
+				</span>
+				<span class="part">
+					1
+					<span class="knex-icon other-mediumtyre" title="medium tyre"></span>
+				</span>
+				<span class="part">
+					3
+					<span class="knex-icon other-washer" title="washer"></span>
+				</span>
+				<span class="part">
+					1
+					<span class="knex-icon other-mediumhub" title="medium hub"></span>
+				</span>
+		</p>
+	</div>
+
+	<!-- <section class="panel panel-default parts-panel">
+		<div class="panel-body" style="white-space: nowrap">
+				<div class="row" style="margin-bottom: -15px; margin-top: 15px;">
+					<img style="width: 100%" src="2.frame/1.base/parts.jpg" />
+				</div>
+		</div>
+	</section> -->
+	</div>
+
+
+	<div data-partsfor="#frame-base-1">
+	</div>
+
+
+
+	<div data-partsfor="#frame-base-2">
+	</div>
+
+
+
+	<div data-partsfor="#frame-base-3">
+	</div>
+
+
+
+	<div data-partsfor="#frame-base-4">
+	</div>
+
+
+
+	<div data-partsfor="#frame-base-5">
+	</div>
+
+
+
+	<div data-partsfor="#frame-base-6">
+	</div>
+
+
+
+	<div data-partsfor="#frame-base-7">
+	</div>
+
+
+
+	<div data-partsfor="#frame-base-8">
+	</div>
+
+
+
+	<div data-partsfor="#frame-base-9">
+	</div>
+
+
+
+	<div data-partsfor="#frame-base-10">
+	</div>
+
+
+
+	<div data-partsfor="#frame-base-11">
+	</div>
+
+
+
+	<div data-partsfor="#frame-base-12">
+	</div>
+
+
+
+	<div data-partsfor="#frame-base-13">
+	</div>
+
+
+
+	<div data-partsfor="#frame-base-14">
+	</div>
+
+
+
+	<div data-partsfor="#frame-base-15">
+	</div>
+
+
+
+
+	<div data-partsfor="#frame-tower">
+	<div class="part-list">
+		<p>
+				<span class="part">
+					50
+					<span class="knex-icon rod-green" title="green"></span>
+				</span>
+				<span class="part">
+					24
+					<span class="knex-icon rod-white" title="white"></span>
+				</span>
+				<span class="part">
+					91
+					<span class="knex-icon rod-blue" title="blue"></span>
+				</span>
+				<span class="part">
+					27
+					<span class="knex-icon rod-yellow" title="yellow"></span>
+				</span>
+				<span class="part">
+					130
+					<span class="knex-icon rod-red" title="red"></span>
+				</span>
+				<span class="part">
+					22
+					<span class="knex-icon rod-gray" title="gray"></span>
+				</span>
+				<span class="part">
+					70
+					<span class="knex-icon rod-orange" title="orange"></span>
+				</span>
+		</p>
+		<p>
+				<span class="part">
+					3
+					<span class="knex-icon connector-gray" title="gray"></span>
+				</span>
+				<span class="part">
+					59
+					<span class="knex-icon connector-orange" title="orange"></span>
+				</span>
+				<span class="part">
+					42
+					<span class="knex-icon connector-yellow" title="yellow"></span>
+				</span>
+				<span class="part">
+					55
+					<span class="knex-icon connector-blue" title="blue"></span>
+				</span>
+				<span class="part">
+					3
+					<span class="knex-icon connector-white" title="white"></span>
+				</span>
+				<span class="part">
+					111
+					<span class="knex-icon connector-purple" title="purple"></span>
+				</span>
+		</p>
+		<p>
+				<span class="part">
+					2
+					<span class="knex-icon other-joint" title="joint"></span>
+				</span>
+		</p>
+	</div>
+
+	<!-- <section class="panel panel-default parts-panel">
+		<div class="panel-body" style="white-space: nowrap">
+				<div class="row" style="margin-bottom: -15px; margin-top: 15px;">
+					<img style="width: 100%" src="2.frame/2.tower/parts.jpg" />
+				</div>
+		</div>
+	</section> -->
+	</div>
+
+
+	<div data-partsfor="#frame-tower-bottom">
+	<div class="part-list">
+		<p>
+				<span class="part">
+					10
+					<span class="knex-icon rod-green" title="green"></span>
+				</span>
+				<span class="part">
+					6
+					<span class="knex-icon rod-white" title="white"></span>
+				</span>
+				<span class="part">
+					27
+					<span class="knex-icon rod-blue" title="blue"></span>
+				</span>
+				<span class="part">
+					11
+					<span class="knex-icon rod-yellow" title="yellow"></span>
+				</span>
+				<span class="part">
+					36
+					<span class="knex-icon rod-red" title="red"></span>
+				</span>
+				<span class="part">
+					6
+					<span class="knex-icon rod-gray" title="gray"></span>
+				</span>
+				<span class="part">
+					22
+					<span class="knex-icon rod-orange" title="orange"></span>
+				</span>
+		</p>
+		<p>
+				<span class="part">
+					13
+					<span class="knex-icon connector-orange" title="orange"></span>
+				</span>
+				<span class="part">
+					14
+					<span class="knex-icon connector-yellow" title="yellow"></span>
+				</span>
+				<span class="part">
+					8
+					<span class="knex-icon connector-blue" title="blue"></span>
+				</span>
+				<span class="part">
+					26
+					<span class="knex-icon connector-purple" title="purple"></span>
+				</span>
+		</p>
+		<p>
+		</p>
+	</div>
+
+	<!-- <section class="panel panel-default parts-panel">
+		<div class="panel-body" style="white-space: nowrap">
+		</div>
+	</section> -->
+	</div>
+
+
+
+	<div data-partsfor="#frame-tower-middle">
+	<div class="part-list">
+		<p>
+				<span class="part">
+					32
+					<span class="knex-icon rod-green" title="green"></span>
+				</span>
+				<span class="part">
+					8
+					<span class="knex-icon rod-white" title="white"></span>
+				</span>
+				<span class="part">
+					28
+					<span class="knex-icon rod-blue" title="blue"></span>
+				</span>
+				<span class="part">
+					8
+					<span class="knex-icon rod-yellow" title="yellow"></span>
+				</span>
+				<span class="part">
+					46
+					<span class="knex-icon rod-red" title="red"></span>
+				</span>
+				<span class="part">
+					8
+					<span class="knex-icon rod-gray" title="gray"></span>
+				</span>
+				<span class="part">
+					24
+					<span class="knex-icon rod-orange" title="orange"></span>
+				</span>
+		</p>
+		<p>
+				<span class="part">
+					2
+					<span class="knex-icon connector-gray" title="gray"></span>
+				</span>
+				<span class="part">
+					16
+					<span class="knex-icon connector-orange" title="orange"></span>
+				</span>
+				<span class="part">
+					14
+					<span class="knex-icon connector-yellow" title="yellow"></span>
+				</span>
+				<span class="part">
+					30
+					<span class="knex-icon connector-blue" title="blue"></span>
+				</span>
+				<span class="part">
+					2
+					<span class="knex-icon connector-white" title="white"></span>
+				</span>
+				<span class="part">
+					42
+					<span class="knex-icon connector-purple" title="purple"></span>
+				</span>
+		</p>
+		<p>
+		</p>
+	</div>
+
+	<!-- <section class="panel panel-default parts-panel">
+		<div class="panel-body" style="white-space: nowrap">
+		</div>
+	</section> -->
+	</div>
+
+
+
+	<div data-partsfor="#frame-tower-top">
+	<div class="part-list">
+		<p>
+				<span class="part">
+					8
+					<span class="knex-icon rod-green" title="green"></span>
+				</span>
+				<span class="part">
+					10
+					<span class="knex-icon rod-white" title="white"></span>
+				</span>
+				<span class="part">
+					36
+					<span class="knex-icon rod-blue" title="blue"></span>
+				</span>
+				<span class="part">
+					8
+					<span class="knex-icon rod-yellow" title="yellow"></span>
+				</span>
+				<span class="part">
+					48
+					<span class="knex-icon rod-red" title="red"></span>
+				</span>
+				<span class="part">
+					8
+					<span class="knex-icon rod-gray" title="gray"></span>
+				</span>
+				<span class="part">
+					24
+					<span class="knex-icon rod-orange" title="orange"></span>
+				</span>
+		</p>
+		<p>
+				<span class="part">
+					1
+					<span class="knex-icon connector-gray" title="gray"></span>
+				</span>
+				<span class="part">
+					30
+					<span class="knex-icon connector-orange" title="orange"></span>
+				</span>
+				<span class="part">
+					14
+					<span class="knex-icon connector-yellow" title="yellow"></span>
+				</span>
+				<span class="part">
+					17
+					<span class="knex-icon connector-blue" title="blue"></span>
+				</span>
+				<span class="part">
+					1
+					<span class="knex-icon connector-white" title="white"></span>
+				</span>
+				<span class="part">
+					43
+					<span class="knex-icon connector-purple" title="purple"></span>
+				</span>
+		</p>
+		<p>
+				<span class="part">
+					2
+					<span class="knex-icon other-joint" title="joint"></span>
+				</span>
+		</p>
+	</div>
+
+	<!-- <section class="panel panel-default parts-panel">
+		<div class="panel-body" style="white-space: nowrap">
+		</div>
+	</section> -->
+	</div>
+
+
+
+	<div data-partsfor="#frame-tower-4">
+	</div>
+
+
+
+	<div data-partsfor="#frame-tower-5">
+	</div>
+
+
+
+	<div data-partsfor="#frame-tower-6">
+	</div>
+
+
+
+	<div data-partsfor="#frame-tower-7">
+	</div>
+
+
+
+	<div data-partsfor="#frame-tower-8">
+	</div>
+
+
+
+	<div data-partsfor="#frame-tower-9">
+	</div>
+
+
+
+	<div data-partsfor="#frame-tower-10">
+	</div>
+
+
+
+	<div data-partsfor="#frame-tower-11">
+	</div>
+
+
+
+
+
+	<div data-partsfor="#top">
+	<div class="part-list">
+		<p>
+				<span class="part">
+					614
+					<span class="knex-icon rod-green" title="green"></span>
+				</span>
+				<span class="part">
+					133
+					<span class="knex-icon rod-white" title="white"></span>
+				</span>
+				<span class="part">
+					274
+					<span class="knex-icon rod-blue" title="blue"></span>
+				</span>
+				<span class="part">
+					141
+					<span class="knex-icon rod-yellow" title="yellow"></span>
+				</span>
+				<span class="part">
+					58
+					<span class="knex-icon rod-red" title="red"></span>
+				</span>
+				<span class="part">
+					8
+					<span class="knex-icon rod-gray" title="gray"></span>
+				</span>
+				<span class="part">
+					48
+					<span class="knex-icon rod-orange" title="orange"></span>
+				</span>
+				<span class="part">
+					3
+					<span class="knex-icon rod-grayblack" title="gray (black)"></span>
+				</span>
+				<span class="part">
+					1
+					<span class="knex-icon rod-whiteblack" title="white (black)"></span>
+				</span>
+				<span class="part">
+					3
+					<span class="knex-icon rod-redtan" title="red (tan)"></span>
+				</span>
+		</p>
+		<p>
+				<span class="part">
+					54
+					<span class="knex-icon connector-tan" title="tan"></span>
+				</span>
+				<span class="part">
+					63
+					<span class="knex-icon connector-gray" title="gray"></span>
+				</span>
+				<span class="part">
+					50
+					<span class="knex-icon connector-orange" title="orange"></span>
+				</span>
+				<span class="part">
+					3
+					<span class="knex-icon connector-ltgray" title="lt. gray"></span>
+				</span>
+				<span class="part">
+					34
+					<span class="knex-icon connector-red" title="red"></span>
+				</span>
+				<span class="part">
+					57
+					<span class="knex-icon connector-green" title="green"></span>
+				</span>
+				<span class="part">
+					111
+					<span class="knex-icon connector-yellow" title="yellow"></span>
+				</span>
+				<span class="part">
+					192
+					<span class="knex-icon connector-blue" title="blue"></span>
+				</span>
+				<span class="part">
+					111
+					<span class="knex-icon connector-white" title="white"></span>
+				</span>
+				<span class="part">
+					260
+					<span class="knex-icon connector-purple" title="purple"></span>
+				</span>
+				<span class="part">
+					32
+					<span class="knex-icon connector-bluemetallic" title="blue (metallic)"></span>
+				</span>
+		</p>
+		<p>
+				<span class="part">
+					2
+					<span class="knex-icon other-redgear" title="red gear"></span>
+				</span>
+				<span class="part">
+					5
+					<span class="knex-icon other-yellowgear" title="yellow gear"></span>
+				</span>
+				<span class="part">
+					5
+					<span class="knex-icon other-bluegear" title="blue gear"></span>
+				</span>
+				<span class="part">
+					1
+					<span class="knex-icon other-smallhub" title="small hub"></span>
+				</span>
+				<span class="part">
+					2
+					<span class="knex-icon other-joint" title="joint"></span>
+				</span>
+				<span class="part">
+					102
+					<span class="knex-icon other-washer" title="washer"></span>
+				</span>
+		</p>
+	</div>
+
+	<!-- <section class="panel panel-default parts-panel">
+		<div class="panel-body" style="white-space: nowrap">
+				<div class="row" style="margin-bottom: -15px; margin-top: 15px;">
+					<img style="width: 100%" src="3.top/parts.jpg" />
+				</div>
+		</div>
+	</section> -->
+	</div>
+
+
+	<div data-partsfor="#top-inside">
+	<div class="part-list">
+		<p>
+				<span class="part">
+					439
+					<span class="knex-icon rod-green" title="green"></span>
+				</span>
+				<span class="part">
+					111
+					<span class="knex-icon rod-white" title="white"></span>
+				</span>
+				<span class="part">
+					257
+					<span class="knex-icon rod-blue" title="blue"></span>
+				</span>
+				<span class="part">
+					73
+					<span class="knex-icon rod-yellow" title="yellow"></span>
+				</span>
+				<span class="part">
+					44
+					<span class="knex-icon rod-red" title="red"></span>
+				</span>
+				<span class="part">
+					2
+					<span class="knex-icon rod-gray" title="gray"></span>
+				</span>
+				<span class="part">
+					31
+					<span class="knex-icon rod-orange" title="orange"></span>
+				</span>
+				<span class="part">
+					3
+					<span class="knex-icon rod-grayblack" title="gray (black)"></span>
+				</span>
+				<span class="part">
+					1
+					<span class="knex-icon rod-whiteblack" title="white (black)"></span>
+				</span>
+				<span class="part">
+					3
+					<span class="knex-icon rod-redtan" title="red (tan)"></span>
+				</span>
+		</p>
+		<p>
+				<span class="part">
+					51
+					<span class="knex-icon connector-tan" title="tan"></span>
+				</span>
+				<span class="part">
+					57
+					<span class="knex-icon connector-gray" title="gray"></span>
+				</span>
+				<span class="part">
+					49
+					<span class="knex-icon connector-orange" title="orange"></span>
+				</span>
+				<span class="part">
+					3
+					<span class="knex-icon connector-ltgray" title="lt. gray"></span>
+				</span>
+				<span class="part">
+					22
+					<span class="knex-icon connector-red" title="red"></span>
+				</span>
+				<span class="part">
+					44
+					<span class="knex-icon connector-green" title="green"></span>
+				</span>
+				<span class="part">
+					98
+					<span class="knex-icon connector-yellow" title="yellow"></span>
+				</span>
+				<span class="part">
+					163
+					<span class="knex-icon connector-blue" title="blue"></span>
+				</span>
+				<span class="part">
+					52
+					<span class="knex-icon connector-white" title="white"></span>
+				</span>
+				<span class="part">
+					185
+					<span class="knex-icon connector-purple" title="purple"></span>
+				</span>
+				<span class="part">
+					32
+					<span class="knex-icon connector-bluemetallic" title="blue (metallic)"></span>
+				</span>
+		</p>
+		<p>
+				<span class="part">
+					2
+					<span class="knex-icon other-redgear" title="red gear"></span>
+				</span>
+				<span class="part">
+					5
+					<span class="knex-icon other-yellowgear" title="yellow gear"></span>
+				</span>
+				<span class="part">
+					5
+					<span class="knex-icon other-bluegear" title="blue gear"></span>
+				</span>
+				<span class="part">
+					1
+					<span class="knex-icon other-smallhub" title="small hub"></span>
+				</span>
+				<span class="part">
+					2
+					<span class="knex-icon other-joint" title="joint"></span>
+				</span>
+				<span class="part">
+					102
+					<span class="knex-icon other-washer" title="washer"></span>
+				</span>
+		</p>
+	</div>
+
+	<!-- <section class="panel panel-default parts-panel">
+		<div class="panel-body" style="white-space: nowrap">
+				<div class="row" style="margin-bottom: -15px; margin-top: 15px;">
+					<img style="width: 100%" src="3.top/1.inside/parts.jpg" />
+				</div>
+		</div>
+	</section> -->
+	</div>
+
+
+	<div data-partsfor="#top-inside-mechanism">
+	<div class="part-list">
+		<p>
+				<span class="part">
+					75
+					<span class="knex-icon rod-green" title="green"></span>
+				</span>
+				<span class="part">
+					19
+					<span class="knex-icon rod-white" title="white"></span>
+				</span>
+				<span class="part">
+					109
+					<span class="knex-icon rod-blue" title="blue"></span>
+				</span>
+				<span class="part">
+					11
+					<span class="knex-icon rod-yellow" title="yellow"></span>
+				</span>
+				<span class="part">
+					9
+					<span class="knex-icon rod-red" title="red"></span>
+				</span>
+				<span class="part">
+					1
+					<span class="knex-icon rod-gray" title="gray"></span>
+				</span>
+				<span class="part">
+					2
+					<span class="knex-icon rod-grayblack" title="gray (black)"></span>
+				</span>
+		</p>
+		<p>
+				<span class="part">
+					39
+					<span class="knex-icon connector-tan" title="tan"></span>
+				</span>
+				<span class="part">
+					28
+					<span class="knex-icon connector-gray" title="gray"></span>
+				</span>
+				<span class="part">
+					30
+					<span class="knex-icon connector-orange" title="orange"></span>
+				</span>
+				<span class="part">
+					1
+					<span class="knex-icon connector-ltgray" title="lt. gray"></span>
+				</span>
+				<span class="part">
+					4
+					<span class="knex-icon connector-red" title="red"></span>
+				</span>
+				<span class="part">
+					29
+					<span class="knex-icon connector-yellow" title="yellow"></span>
+				</span>
+				<span class="part">
+					37
+					<span class="knex-icon connector-blue" title="blue"></span>
+				</span>
+				<span class="part">
+					20
+					<span class="knex-icon connector-white" title="white"></span>
+				</span>
+				<span class="part">
+					29
+					<span class="knex-icon connector-purple" title="purple"></span>
+				</span>
+		</p>
+		<p>
+				<span class="part">
+					2
+					<span class="knex-icon other-redgear" title="red gear"></span>
+				</span>
+				<span class="part">
+					5
+					<span class="knex-icon other-bluegear" title="blue gear"></span>
+				</span>
+				<span class="part">
+					5
+					<span class="knex-icon other-yellowgear" title="yellow gear"></span>
+				</span>
+				<span class="part">
+					99
+					<span class="knex-icon other-washer" title="washer"></span>
+				</span>
+		</p>
+	</div>
+
+	<!-- <section class="panel panel-default parts-panel">
+		<div class="panel-body" style="white-space: nowrap">
+				<div class="row" style="margin-bottom: -15px; margin-top: 15px;">
+					<img style="width: 100%" src="3.top/1.inside/1.mechanism/parts.jpg" />
+				</div>
+		</div>
+	</section> -->
+	</div>
+
+
+	<div data-partsfor="#top-inside-mechanism-1">
+	</div>
+
+
+
+	<div data-partsfor="#top-inside-mechanism-2">
+	</div>
+
+
+
+	<div data-partsfor="#top-inside-mechanism-3">
+	</div>
+
+
+
+	<div data-partsfor="#top-inside-mechanism-4">
+	</div>
+
+
+
+	<div data-partsfor="#top-inside-mechanism-5">
+	</div>
+
+
+
+	<div data-partsfor="#top-inside-mechanism-6">
+	</div>
+
+
+
+	<div data-partsfor="#top-inside-mechanism-7">
+	</div>
+
+
+
+	<div data-partsfor="#top-inside-mechanism-8">
+	</div>
+
+
+
+	<div data-partsfor="#top-inside-mechanism-9">
+	</div>
+
+
+
+	<div data-partsfor="#top-inside-mechanism-10">
+	</div>
+
+
+
+	<div data-partsfor="#top-inside-mechanism-11">
+	</div>
+
+
+
+	<div data-partsfor="#top-inside-mechanism-12">
+	</div>
+
+
+
+	<div data-partsfor="#top-inside-mechanism-13">
+	</div>
+
+
+
+	<div data-partsfor="#top-inside-mechanism-14">
+	</div>
+
+
+
+	<div data-partsfor="#top-inside-mechanism-15">
+	</div>
+
+
+
+	<div data-partsfor="#top-inside-mechanism-16">
+	</div>
+
+
+
+	<div data-partsfor="#top-inside-mechanism-17">
+	</div>
+
+
+
+	<div data-partsfor="#top-inside-mechanism-18">
+	</div>
+
+
+
+	<div data-partsfor="#top-inside-mechanism-19">
+	</div>
+
+
+
+	<div data-partsfor="#top-inside-mechanism-20">
+	</div>
+
+
+
+
+	<div data-partsfor="#top-inside-front">
+	<div class="part-list">
+		<p>
+				<span class="part">
+					58
+					<span class="knex-icon rod-green" title="green"></span>
+				</span>
+				<span class="part">
+					14
+					<span class="knex-icon rod-white" title="white"></span>
+				</span>
+				<span class="part">
+					63
+					<span class="knex-icon rod-blue" title="blue"></span>
+				</span>
+				<span class="part">
+					14
+					<span class="knex-icon rod-yellow" title="yellow"></span>
+				</span>
+				<span class="part">
+					4
+					<span class="knex-icon rod-red" title="red"></span>
+				</span>
+				<span class="part">
+					6
+					<span class="knex-icon rod-orange" title="orange"></span>
+				</span>
+		</p>
+		<p>
+				<span class="part">
+					4
+					<span class="knex-icon connector-orange" title="orange"></span>
+				</span>
+				<span class="part">
+					13
+					<span class="knex-icon connector-green" title="green"></span>
+				</span>
+				<span class="part">
+					14
+					<span class="knex-icon connector-yellow" title="yellow"></span>
+				</span>
+				<span class="part">
+					48
+					<span class="knex-icon connector-blue" title="blue"></span>
+				</span>
+				<span class="part">
+					3
+					<span class="knex-icon connector-white" title="white"></span>
+				</span>
+				<span class="part">
+					36
+					<span class="knex-icon connector-purple" title="purple"></span>
+				</span>
+		</p>
+		<p>
+				<span class="part">
+					1
+					<span class="knex-icon other-smallhub" title="small hub"></span>
+				</span>
+				<span class="part">
+					2
+					<span class="knex-icon other-joint" title="joint"></span>
+				</span>
+				<span class="part">
+					3
+					<span class="knex-icon other-washer" title="washer"></span>
+				</span>
+		</p>
+	</div>
+
+	<!-- <section class="panel panel-default parts-panel">
+		<div class="panel-body" style="white-space: nowrap">
+				<div class="row" style="margin-bottom: -15px; margin-top: 15px;">
+					<img style="width: 100%" src="3.top/1.inside/2.front/parts.jpg" />
+				</div>
+		</div>
+	</section> -->
+	</div>
+
+
+	<div data-partsfor="#top-inside-front-1">
+	</div>
+
+
+
+	<div data-partsfor="#top-inside-front-2">
+	</div>
+
+
+
+
+	<div data-partsfor="#top-inside-back">
+	<div class="part-list">
+		<p>
+				<span class="part">
+					25
+					<span class="knex-icon rod-green" title="green"></span>
+				</span>
+				<span class="part">
+					24
+					<span class="knex-icon rod-blue" title="blue"></span>
+				</span>
+				<span class="part">
+					15
+					<span class="knex-icon rod-yellow" title="yellow"></span>
+				</span>
+				<span class="part">
+					9
+					<span class="knex-icon rod-red" title="red"></span>
+				</span>
+				<span class="part">
+					1
+					<span class="knex-icon rod-gray" title="gray"></span>
+				</span>
+				<span class="part">
+					3
+					<span class="knex-icon rod-redtan" title="red (tan)"></span>
+				</span>
+				<span class="part">
+					9
+					<span class="knex-icon rod-orange" title="orange"></span>
+				</span>
+		</p>
+		<p>
+				<span class="part">
+					4
+					<span class="knex-icon connector-gray" title="gray"></span>
+				</span>
+				<span class="part">
+					2
+					<span class="knex-icon connector-orange" title="orange"></span>
+				</span>
+				<span class="part">
+					1
+					<span class="knex-icon connector-red" title="red"></span>
+				</span>
+				<span class="part">
+					7
+					<span class="knex-icon connector-green" title="green"></span>
+				</span>
+				<span class="part">
+					8
+					<span class="knex-icon connector-yellow" title="yellow"></span>
+				</span>
+				<span class="part">
+					21
+					<span class="knex-icon connector-blue" title="blue"></span>
+				</span>
+				<span class="part">
+					2
+					<span class="knex-icon connector-white" title="white"></span>
+				</span>
+				<span class="part">
+					25
+					<span class="knex-icon connector-purple" title="purple"></span>
+				</span>
+		</p>
+		<p>
+		</p>
+	</div>
+
+	<!-- <section class="panel panel-default parts-panel">
+		<div class="panel-body" style="white-space: nowrap">
+				<div class="row" style="margin-bottom: -15px; margin-top: 15px;">
+					<img style="width: 100%" src="3.top/1.inside/3.back/parts.jpg" />
+				</div>
+		</div>
+	</section> -->
+	</div>
+
+
+	<div data-partsfor="#top-inside-back-1">
+	</div>
+
+
+
+	<div data-partsfor="#top-inside-back-2">
+	</div>
+
+
+
+
+	<div data-partsfor="#top-inside-channel">
+	<div class="part-list">
+		<p>
+				<span class="part">
+					42
+					<span class="knex-icon rod-green" title="green"></span>
+				</span>
+				<span class="part">
+					18
+					<span class="knex-icon rod-white" title="white"></span>
+				</span>
+				<span class="part">
+					4
+					<span class="knex-icon rod-blue" title="blue"></span>
+				</span>
+				<span class="part">
+					2
+					<span class="knex-icon rod-yellow" title="yellow"></span>
+				</span>
+		</p>
+		<p>
+				<span class="part">
+					4
+					<span class="knex-icon connector-gray" title="gray"></span>
+				</span>
+				<span class="part">
+					1
+					<span class="knex-icon connector-orange" title="orange"></span>
+				</span>
+				<span class="part">
+					3
+					<span class="knex-icon connector-red" title="red"></span>
+				</span>
+				<span class="part">
+					2
+					<span class="knex-icon connector-green" title="green"></span>
+				</span>
+				<span class="part">
+					16
+					<span class="knex-icon connector-yellow" title="yellow"></span>
+				</span>
+				<span class="part">
+					2
+					<span class="knex-icon connector-white" title="white"></span>
+				</span>
+				<span class="part">
+					16
+					<span class="knex-icon connector-purple" title="purple"></span>
+				</span>
+		</p>
+		<p>
+		</p>
+	</div>
+
+	<!-- <section class="panel panel-default parts-panel">
+		<div class="panel-body" style="white-space: nowrap">
+				<div class="row" style="margin-bottom: -15px; margin-top: 15px;">
+					<img style="width: 100%" src="3.top/1.inside/4.channel/parts.jpg" />
+				</div>
+		</div>
+	</section> -->
+	</div>
+
+
+	<div data-partsfor="#top-inside-channel-1">
+	</div>
+
+
+
+	<div data-partsfor="#top-inside-channel-2">
+	</div>
+
+
+
+	<div data-partsfor="#top-inside-channel-3">
+	</div>
+
+
+
+
+	<div data-partsfor="#top-inside-right">
+	<div class="part-list">
+		<p>
+				<span class="part">
+					97
+					<span class="knex-icon rod-green" title="green"></span>
+				</span>
+				<span class="part">
+					46
+					<span class="knex-icon rod-white" title="white"></span>
+				</span>
+				<span class="part">
+					28
+					<span class="knex-icon rod-blue" title="blue"></span>
+				</span>
+				<span class="part">
+					18
+					<span class="knex-icon rod-yellow" title="yellow"></span>
+				</span>
+				<span class="part">
+					11
+					<span class="knex-icon rod-red" title="red"></span>
+				</span>
+				<span class="part">
+					8
+					<span class="knex-icon rod-orange" title="orange"></span>
+				</span>
+				<span class="part">
+					1
+					<span class="knex-icon rod-grayblack" title="gray (black)"></span>
+				</span>
+		</p>
+		<p>
+				<span class="part">
+					1
+					<span class="knex-icon connector-tan" title="tan"></span>
+				</span>
+				<span class="part">
+					18
+					<span class="knex-icon connector-gray" title="gray"></span>
+				</span>
+				<span class="part">
+					9
+					<span class="knex-icon connector-orange" title="orange"></span>
+				</span>
+				<span class="part">
+					2
+					<span class="knex-icon connector-ltgray" title="lt. gray"></span>
+				</span>
+				<span class="part">
+					12
+					<span class="knex-icon connector-red" title="red"></span>
+				</span>
+				<span class="part">
+					13
+					<span class="knex-icon connector-green" title="green"></span>
+				</span>
+				<span class="part">
+					26
+					<span class="knex-icon connector-yellow" title="yellow"></span>
+				</span>
+				<span class="part">
+					10
+					<span class="knex-icon connector-blue" title="blue"></span>
+				</span>
+				<span class="part">
+					9
+					<span class="knex-icon connector-white" title="white"></span>
+				</span>
+				<span class="part">
+					57
+					<span class="knex-icon connector-purple" title="purple"></span>
+				</span>
+				<span class="part">
+					5
+					<span class="knex-icon connector-bluemetallic" title="blue (metallic)"></span>
+				</span>
+		</p>
+		<p>
+		</p>
+	</div>
+
+	<!-- <section class="panel panel-default parts-panel">
+		<div class="panel-body" style="white-space: nowrap">
+				<div class="row" style="margin-bottom: -15px; margin-top: 15px;">
+					<img style="width: 100%" src="3.top/1.inside/5.right/parts.jpg" />
+				</div>
+		</div>
+	</section> -->
+	</div>
+
+
+	<div data-partsfor="#top-inside-right-1">
+	</div>
+
+
+
+	<div data-partsfor="#top-inside-right-2">
+	</div>
+
+
+
+	<div data-partsfor="#top-inside-right-3">
+	</div>
+
+
+
+
+	<div data-partsfor="#top-inside-left">
+	<div class="part-list">
+		<p>
+				<span class="part">
+					17
+					<span class="knex-icon rod-green" title="green"></span>
+				</span>
+				<span class="part">
+					14
+					<span class="knex-icon rod-blue" title="blue"></span>
+				</span>
+				<span class="part">
+					13
+					<span class="knex-icon rod-yellow" title="yellow"></span>
+				</span>
+				<span class="part">
+					11
+					<span class="knex-icon rod-red" title="red"></span>
+				</span>
+				<span class="part">
+					8
+					<span class="knex-icon rod-orange" title="orange"></span>
+				</span>
+		</p>
+		<p>
+				<span class="part">
+					3
+					<span class="knex-icon connector-gray" title="gray"></span>
+				</span>
+				<span class="part">
+					7
+					<span class="knex-icon connector-green" title="green"></span>
+				</span>
+				<span class="part">
+					5
+					<span class="knex-icon connector-yellow" title="yellow"></span>
+				</span>
+				<span class="part">
+					6
+					<span class="knex-icon connector-blue" title="blue"></span>
+				</span>
+				<span class="part">
+					5
+					<span class="knex-icon connector-white" title="white"></span>
+				</span>
+				<span class="part">
+					20
+					<span class="knex-icon connector-purple" title="purple"></span>
+				</span>
+		</p>
+		<p>
+		</p>
+	</div>
+
+	<!-- <section class="panel panel-default parts-panel">
+		<div class="panel-body" style="white-space: nowrap">
+				<div class="row" style="margin-bottom: -15px; margin-top: 15px;">
+					<img style="width: 100%" src="3.top/1.inside/6.left/parts.jpg" />
+				</div>
+		</div>
+	</section> -->
+	</div>
+
+
+	<div data-partsfor="#top-inside-left-1">
+	</div>
+
+
+
+	<div data-partsfor="#top-inside-left-2">
+	</div>
+
+
+
+	<div data-partsfor="#top-inside-left-3">
+	</div>
+
+
+
+
+	<div data-partsfor="#top-inside-face">
+	<div class="part-list">
+		<p>
+				<span class="part">
+					124
+					<span class="knex-icon rod-green" title="green"></span>
+				</span>
+				<span class="part">
+					11
+					<span class="knex-icon rod-white" title="white"></span>
+				</span>
+				<span class="part">
+					15
+					<span class="knex-icon rod-blue" title="blue"></span>
+				</span>
+				<span class="part">
+					1
+					<span class="knex-icon rod-whiteblack" title="white (black)"></span>
+				</span>
+		</p>
+		<p>
+				<span class="part">
+					11
+					<span class="knex-icon connector-tan" title="tan"></span>
+				</span>
+				<span class="part">
+					2
+					<span class="knex-icon connector-green" title="green"></span>
+				</span>
+				<span class="part">
+					41
+					<span class="knex-icon connector-blue" title="blue"></span>
+				</span>
+				<span class="part">
+					11
+					<span class="knex-icon connector-white" title="white"></span>
+				</span>
+				<span class="part">
+					2
+					<span class="knex-icon connector-purple" title="purple"></span>
+				</span>
+				<span class="part">
+					27
+					<span class="knex-icon connector-bluemetallic" title="blue (metallic)"></span>
+				</span>
+		</p>
+		<p>
+		</p>
+	</div>
+
+	<!-- <section class="panel panel-default parts-panel">
+		<div class="panel-body" style="white-space: nowrap">
+				<div class="row" style="margin-bottom: -15px; margin-top: 15px;">
+					<img style="width: 100%" src="3.top/1.inside/7.face/parts.jpg" />
+				</div>
+		</div>
+	</section> -->
+	</div>
+
+
+	<div data-partsfor="#top-inside-face-1">
+	</div>
+
+
+
+	<div data-partsfor="#top-inside-face-2">
+	</div>
+
+
+
+	<div data-partsfor="#top-inside-face-3">
+	</div>
+
+
+
+
+	<div data-partsfor="#top-inside-hands">
+	<div class="part-list">
+		<p>
+				<span class="part">
+					1
+					<span class="knex-icon rod-green" title="green"></span>
+				</span>
+				<span class="part">
+					3
+					<span class="knex-icon rod-white" title="white"></span>
+				</span>
+		</p>
+		<p>
+				<span class="part">
+					3
+					<span class="knex-icon connector-orange" title="orange"></span>
+				</span>
+				<span class="part">
+					2
+					<span class="knex-icon connector-red" title="red"></span>
+				</span>
+		</p>
+		<p>
+		</p>
+	</div>
+
+	<!-- <section class="panel panel-default parts-panel">
+		<div class="panel-body" style="white-space: nowrap">
+		</div>
+	</section> -->
+	</div>
+
+
+
+	<div data-partsfor="#top-inside-10">
+	</div>
+
+
+
+	<div data-partsfor="#top-inside-11">
+	</div>
+
+
+
+	<div data-partsfor="#top-inside-12">
+	</div>
+
+
+
+	<div data-partsfor="#top-inside-13">
+	</div>
+
+
+
+
+	<div data-partsfor="#top-roof">
+	<div class="part-list">
+		<p>
+				<span class="part">
+					175
+					<span class="knex-icon rod-green" title="green"></span>
+				</span>
+				<span class="part">
+					22
+					<span class="knex-icon rod-white" title="white"></span>
+				</span>
+				<span class="part">
+					17
+					<span class="knex-icon rod-blue" title="blue"></span>
+				</span>
+				<span class="part">
+					68
+					<span class="knex-icon rod-yellow" title="yellow"></span>
+				</span>
+				<span class="part">
+					14
+					<span class="knex-icon rod-red" title="red"></span>
+				</span>
+				<span class="part">
+					6
+					<span class="knex-icon rod-gray" title="gray"></span>
+				</span>
+				<span class="part">
+					17
+					<span class="knex-icon rod-orange" title="orange"></span>
+				</span>
+		</p>
+		<p>
+				<span class="part">
+					3
+					<span class="knex-icon connector-tan" title="tan"></span>
+				</span>
+				<span class="part">
+					6
+					<span class="knex-icon connector-gray" title="gray"></span>
+				</span>
+				<span class="part">
+					1
+					<span class="knex-icon connector-orange" title="orange"></span>
+				</span>
+				<span class="part">
+					12
+					<span class="knex-icon connector-red" title="red"></span>
+				</span>
+				<span class="part">
+					13
+					<span class="knex-icon connector-green" title="green"></span>
+				</span>
+				<span class="part">
+					13
+					<span class="knex-icon connector-yellow" title="yellow"></span>
+				</span>
+				<span class="part">
+					29
+					<span class="knex-icon connector-blue" title="blue"></span>
+				</span>
+				<span class="part">
+					59
+					<span class="knex-icon connector-white" title="white"></span>
+				</span>
+				<span class="part">
+					75
+					<span class="knex-icon connector-purple" title="purple"></span>
+				</span>
+		</p>
+		<p>
+		</p>
+	</div>
+
+	<!-- <section class="panel panel-default parts-panel">
+		<div class="panel-body" style="white-space: nowrap">
+				<div class="row" style="margin-bottom: -15px; margin-top: 15px;">
+					<img style="width: 100%" src="3.top/2.roof/parts.jpg" />
+				</div>
+		</div>
+	</section> -->
+	</div>
+
+
+	<div data-partsfor="#top-roof-front">
+	<div class="part-list">
+		<p>
+				<span class="part">
+					121
+					<span class="knex-icon rod-green" title="green"></span>
+				</span>
+				<span class="part">
+					22
+					<span class="knex-icon rod-white" title="white"></span>
+				</span>
+				<span class="part">
+					14
+					<span class="knex-icon rod-blue" title="blue"></span>
+				</span>
+		</p>
+		<p>
+				<span class="part">
+					3
+					<span class="knex-icon connector-tan" title="tan"></span>
+				</span>
+				<span class="part">
+					1
+					<span class="knex-icon connector-orange" title="orange"></span>
+				</span>
+				<span class="part">
+					2
+					<span class="knex-icon connector-red" title="red"></span>
+				</span>
+				<span class="part">
+					12
+					<span class="knex-icon connector-yellow" title="yellow"></span>
+				</span>
+				<span class="part">
+					23
+					<span class="knex-icon connector-blue" title="blue"></span>
+				</span>
+				<span class="part">
+					17
+					<span class="knex-icon connector-white" title="white"></span>
+				</span>
+				<span class="part">
+					44
+					<span class="knex-icon connector-purple" title="purple"></span>
+				</span>
+		</p>
+		<p>
+		</p>
+	</div>
+
+	<!-- <section class="panel panel-default parts-panel">
+		<div class="panel-body" style="white-space: nowrap">
+				<div class="row" style="margin-bottom: -15px; margin-top: 15px;">
+					<img style="width: 100%" src="3.top/2.roof/1.front/parts.jpg" />
+				</div>
+		</div>
+	</section> -->
+	</div>
+
+
+
+	<div data-partsfor="#top-roof-top">
+	<div class="part-list">
+		<p>
+				<span class="part">
+					54
+					<span class="knex-icon rod-green" title="green"></span>
+				</span>
+				<span class="part">
+					3
+					<span class="knex-icon rod-blue" title="blue"></span>
+				</span>
+				<span class="part">
+					68
+					<span class="knex-icon rod-yellow" title="yellow"></span>
+				</span>
+				<span class="part">
+					14
+					<span class="knex-icon rod-red" title="red"></span>
+				</span>
+				<span class="part">
+					6
+					<span class="knex-icon rod-gray" title="gray"></span>
+				</span>
+				<span class="part">
+					17
+					<span class="knex-icon rod-orange" title="orange"></span>
+				</span>
+		</p>
+		<p>
+				<span class="part">
+					6
+					<span class="knex-icon connector-gray" title="gray"></span>
+				</span>
+				<span class="part">
+					10
+					<span class="knex-icon connector-red" title="red"></span>
+				</span>
+				<span class="part">
+					13
+					<span class="knex-icon connector-green" title="green"></span>
+				</span>
+				<span class="part">
+					1
+					<span class="knex-icon connector-yellow" title="yellow"></span>
+				</span>
+				<span class="part">
+					6
+					<span class="knex-icon connector-blue" title="blue"></span>
+				</span>
+				<span class="part">
+					42
+					<span class="knex-icon connector-white" title="white"></span>
+				</span>
+				<span class="part">
+					31
+					<span class="knex-icon connector-purple" title="purple"></span>
+				</span>
+		</p>
+		<p>
+		</p>
+	</div>
+
+	<!-- <section class="panel panel-default parts-panel">
+		<div class="panel-body" style="white-space: nowrap">
+		</div>
+	</section> -->
+	</div>
+
+
+
+	<div data-partsfor="#top-roof-3">
+	</div>
+
+
+
+
+	<div data-partsfor="#top-3">
+	</div>
+
+
+
+	<div data-partsfor="#top-4">
+	</div>
+
+
+
+	<div data-partsfor="#top-5">
+	</div>
+
+
+
+	<div data-partsfor="#top-6">
+	</div>
+
+
+
+
+	<div data-partsfor="#pendulum">
+	<div class="part-list">
+		<p>
+				<span class="part">
+					2
+					<span class="knex-icon rod-white" title="white"></span>
+				</span>
+				<span class="part">
+					4
+					<span class="knex-icon rod-yellow" title="yellow"></span>
+				</span>
+				<span class="part">
+					1
+					<span class="knex-icon rod-grayblack" title="gray (black)"></span>
+				</span>
+				<span class="part">
+					16
+					<span class="knex-icon rod-gray" title="gray"></span>
+				</span>
+		</p>
+		<p>
+				<span class="part">
+					1
+					<span class="knex-icon connector-tan" title="tan"></span>
+				</span>
+				<span class="part">
+					6
+					<span class="knex-icon connector-white" title="white"></span>
+				</span>
+		</p>
+		<p>
+				<span class="part">
+					2
+					<span class="knex-icon other-mediumtyre" title="medium tyre"></span>
+				</span>
+				<span class="part">
+					2
+					<span class="knex-icon other-mediumhub" title="medium hub"></span>
+				</span>
+		</p>
+	</div>
+
+	<!-- <section class="panel panel-default parts-panel">
+		<div class="panel-body" style="white-space: nowrap">
+				<div class="row" style="margin-bottom: -15px; margin-top: 15px;">
+					<img style="width: 100%" src="4.pendulum/parts.jpg" />
+				</div>
+		</div>
+	</section> -->
+	</div>
+
+
+	<div data-partsfor="#pendulum-1">
+	</div>
+
+
+
+	<div data-partsfor="#pendulum-2">
+	</div>
+
+
+
+	<div data-partsfor="#pendulum-3">
+	</div>
+
+
+
+
+	<div data-partsfor="#weight">
+	<div class="part-list">
+		<p>
+				<span class="part">
+					1
+					<span class="knex-icon rod-green" title="green"></span>
+				</span>
+				<span class="part">
+					1
+					<span class="knex-icon rod-white" title="white"></span>
+				</span>
+				<span class="part">
+					1
+					<span class="knex-icon rod-grayblack" title="gray (black)"></span>
+				</span>
+		</p>
+		<p>
+				<span class="part">
+					4
+					<span class="knex-icon connector-tan" title="tan"></span>
+				</span>
+				<span class="part">
+					1
+					<span class="knex-icon connector-red" title="red"></span>
+				</span>
+		</p>
+		<p>
+				<span class="part">
+					9
+					<span class="knex-icon other-mediumtyre" title="medium tyre"></span>
+				</span>
+				<span class="part">
+					137
+					<span class="knex-icon other-chain" title="chain"></span>
+				</span>
+				<span class="part">
+					8
+					<span class="knex-icon other-smallhub" title="small hub"></span>
+				</span>
+				<span class="part">
+					9
+					<span class="knex-icon other-mediumhub" title="medium hub"></span>
+				</span>
+				<span class="part">
+					8
+					<span class="knex-icon other-smalltyre" title="small tyre"></span>
+				</span>
+		</p>
+	</div>
+
+	<!-- <section class="panel panel-default parts-panel">
+		<div class="panel-body" style="white-space: nowrap">
+				<div class="row" style="margin-bottom: -15px; margin-top: 15px;">
+					<img style="width: 100%" src="5.weight/parts.jpg" />
+				</div>
+		</div>
+	</section> -->
+	</div>
+
+
+	<div data-partsfor="#weight-1">
+	</div>
+
+
+
+	<div data-partsfor="#weight-chain">
+	</div>
+
+
+
+	<div data-partsfor="#weight-3">
+	</div>
+
+
+
+
+	<div data-partsfor="#7">
+	</div>
+
+
+
+	<div data-partsfor="#8">
+	</div>
+
+
+
+	<div data-partsfor="#9">
+	</div>
+
+
+							</div>
+						</div>
+						<div class="part-images">
+						</div>
+					</div>
+				</div>
+			</div>
 		</div>
 	</body>
 </html>
