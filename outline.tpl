@@ -213,7 +213,7 @@ rod_ids.update({
 			var jumboHeight = $('.jumbotron').outerHeight();
 			function parallax(){
 				var scrolled = $(window).scrollTop();
-				$('.jumbotron').css('background-position-y', (scrolled / jumboHeight * 100) + '%');
+				$('.jumbotron').css('background-position-y', Math.min(2*scrolled / jumboHeight, 1) * 100 + '%');
 			}
 
 			$(window).scroll(function(e){

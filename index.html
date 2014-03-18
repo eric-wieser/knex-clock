@@ -37,7 +37,7 @@
 			var jumboHeight = $('.jumbotron').outerHeight();
 			function parallax(){
 				var scrolled = $(window).scrollTop();
-				$('.jumbotron').css('background-position-y', (scrolled / jumboHeight * 100) + '%');
+				$('.jumbotron').css('background-position-y', Math.min(2*scrolled / jumboHeight, 1) * 100 + '%');
 			}
 
 			$(window).scroll(function(e){
@@ -180,36 +180,20 @@
 				background-position: top right;
 				vertical-align: middle;
 			}
-			.knex-icon.rod-redtan {
-				background-image: url(pieces/90957.gif);
-				text-indent: -9999px;
-			}
-			.knex-icon.rod-white {
-				background-image: url(pieces/90951.gif);
-				text-indent: -9999px;
-			}
-			.knex-icon.rod-gray {
-				background-image: url(pieces/90955.gif);
-				text-indent: -9999px;
-			}
-			.knex-icon.rod-blue {
-				background-image: url(pieces/90952.gif);
-				text-indent: -9999px;
-			}
 			.knex-icon.rod-green {
 				background-image: url(pieces/90950.gif);
-				text-indent: -9999px;
-			}
-			.knex-icon.rod-whiteblack {
-				background-image: url(pieces/90961.gif);
 				text-indent: -9999px;
 			}
 			.knex-icon.rod-yellow {
 				background-image: url(pieces/90953.gif);
 				text-indent: -9999px;
 			}
-			.knex-icon.rod-orange {
-				background-image: url(pieces/90958.gif);
+			.knex-icon.rod-blue {
+				background-image: url(pieces/90952.gif);
+				text-indent: -9999px;
+			}
+			.knex-icon.rod-gray {
+				background-image: url(pieces/90955.gif);
 				text-indent: -9999px;
 			}
 			.knex-icon.rod-red {
@@ -220,8 +204,52 @@
 				background-image: url(pieces/919561.gif);
 				text-indent: -9999px;
 			}
+			.knex-icon.rod-redtan {
+				background-image: url(pieces/90957.gif);
+				text-indent: -9999px;
+			}
+			.knex-icon.rod-white {
+				background-image: url(pieces/90951.gif);
+				text-indent: -9999px;
+			}
+			.knex-icon.rod-orange {
+				background-image: url(pieces/90958.gif);
+				text-indent: -9999px;
+			}
+			.knex-icon.rod-whiteblack {
+				background-image: url(pieces/90961.gif);
+				text-indent: -9999px;
+			}
+			.knex-icon.connector-green {
+				background-image: url(pieces/90905.gif);
+				text-indent: -9999px;
+			}
+			.knex-icon.connector-red {
+				background-image: url(pieces/90904.gif);
+				text-indent: -9999px;
+			}
+			.knex-icon.connector-orange {
+				background-image: url(pieces/90902.gif);
+				text-indent: -9999px;
+			}
+			.knex-icon.connector-gray {
+				background-image: url(pieces/90901.gif);
+				text-indent: -9999px;
+			}
 			.knex-icon.connector-yellow {
 				background-image: url(pieces/90906.gif);
+				text-indent: -9999px;
+			}
+			.knex-icon.connector-tan {
+				background-image: url(pieces/90900.gif);
+				text-indent: -9999px;
+			}
+			.knex-icon.connector-bluemetallic {
+				background-image: url(pieces/91907.gif);
+				text-indent: -9999px;
+			}
+			.knex-icon.connector-purple {
+				background-image: url(pieces/90909.gif);
 				text-indent: -9999px;
 			}
 			.knex-icon.connector-white {
@@ -236,56 +264,32 @@
 				background-image: url(pieces/90903.gif);
 				text-indent: -9999px;
 			}
-			.knex-icon.connector-tan {
-				background-image: url(pieces/90900.gif);
-				text-indent: -9999px;
-			}
-			.knex-icon.connector-purple {
-				background-image: url(pieces/90909.gif);
-				text-indent: -9999px;
-			}
-			.knex-icon.connector-gray {
-				background-image: url(pieces/90901.gif);
-				text-indent: -9999px;
-			}
-			.knex-icon.connector-green {
-				background-image: url(pieces/90905.gif);
-				text-indent: -9999px;
-			}
-			.knex-icon.connector-bluemetallic {
-				background-image: url(pieces/91907.gif);
-				text-indent: -9999px;
-			}
-			.knex-icon.connector-red {
-				background-image: url(pieces/90904.gif);
-				text-indent: -9999px;
-			}
-			.knex-icon.connector-orange {
-				background-image: url(pieces/90902.gif);
-				text-indent: -9999px;
-			}
-			.knex-icon.other-redgear {
-				background-image: url(pieces/90985.gif);
-				text-indent: -9999px;
-			}
 			.knex-icon.other-smallhub {
 				background-image: url(pieces/90978.gif);
 				text-indent: -9999px;
 			}
-			.knex-icon.other-chain {
-				background-image: url(pieces/90987.gif);
-				text-indent: -9999px;
-			}
-			.knex-icon.other-bluegear {
-				background-image: url(pieces/513130.gif);
+			.knex-icon.other-joint {
+				background-image: url(pieces/90913.gif);
 				text-indent: -9999px;
 			}
 			.knex-icon.other-mediumtyre {
 				background-image: url(pieces/91976.gif);
 				text-indent: -9999px;
 			}
-			.knex-icon.other-joint {
-				background-image: url(pieces/90913.gif);
+			.knex-icon.other-redgear {
+				background-image: url(pieces/90985.gif);
+				text-indent: -9999px;
+			}
+			.knex-icon.other-chain {
+				background-image: url(pieces/90987.gif);
+				text-indent: -9999px;
+			}
+			.knex-icon.other-yellowgear {
+				background-image: url(pieces/90998.gif);
+				text-indent: -9999px;
+			}
+			.knex-icon.other-bluegear {
+				background-image: url(pieces/513130.gif);
 				text-indent: -9999px;
 			}
 			.knex-icon.other-mediumhub {
@@ -294,10 +298,6 @@
 			}
 			.knex-icon.other-smalltyre {
 				background-image: url(pieces/91975.gif);
-				text-indent: -9999px;
-			}
-			.knex-icon.other-yellowgear {
-				background-image: url(pieces/90998.gif);
 				text-indent: -9999px;
 			}
 			.knex-icon.other-washer {
@@ -376,24 +376,24 @@
 					<span class="knex-icon rod-red" title="red"></span>
 				</span>
 				<span class="part">
-					3
-					<span class="knex-icon rod-redtan" title="red (tan)"></span>
-				</span>
-				<span class="part">
-					1
-					<span class="knex-icon rod-whiteblack" title="white (black)"></span>
+					5
+					<span class="knex-icon rod-grayblack" title="gray (black)"></span>
 				</span>
 				<span class="part">
 					63
 					<span class="knex-icon rod-gray" title="gray"></span>
 				</span>
 				<span class="part">
-					5
-					<span class="knex-icon rod-grayblack" title="gray (black)"></span>
+					1
+					<span class="knex-icon rod-whiteblack" title="white (black)"></span>
 				</span>
 				<span class="part">
 					124
 					<span class="knex-icon rod-orange" title="orange"></span>
+				</span>
+				<span class="part">
+					3
+					<span class="knex-icon rod-redtan" title="red (tan)"></span>
 				</span>
 		</p>
 		<p>
@@ -444,44 +444,44 @@
 		</p>
 		<p>
 				<span class="part">
+					5
+					<span class="knex-icon other-yellowgear" title="yellow gear"></span>
+				</span>
+				<span class="part">
 					12
 					<span class="knex-icon other-mediumtyre" title="medium tyre"></span>
-				</span>
-				<span class="part">
-					4
-					<span class="knex-icon other-joint" title="joint"></span>
-				</span>
-				<span class="part">
-					5
-					<span class="knex-icon other-bluegear" title="blue gear"></span>
-				</span>
-				<span class="part">
-					105
-					<span class="knex-icon other-washer" title="washer"></span>
 				</span>
 				<span class="part">
 					4
 					<span class="knex-icon other-redgear" title="red gear"></span>
 				</span>
 				<span class="part">
-					9
-					<span class="knex-icon other-smallhub" title="small hub"></span>
-				</span>
-				<span class="part">
-					137
-					<span class="knex-icon other-chain" title="chain"></span>
-				</span>
-				<span class="part">
 					5
-					<span class="knex-icon other-yellowgear" title="yellow gear"></span>
+					<span class="knex-icon other-bluegear" title="blue gear"></span>
+				</span>
+				<span class="part">
+					12
+					<span class="knex-icon other-mediumhub" title="medium hub"></span>
 				</span>
 				<span class="part">
 					8
 					<span class="knex-icon other-smalltyre" title="small tyre"></span>
 				</span>
 				<span class="part">
-					12
-					<span class="knex-icon other-mediumhub" title="medium hub"></span>
+					105
+					<span class="knex-icon other-washer" title="washer"></span>
+				</span>
+				<span class="part">
+					9
+					<span class="knex-icon other-smallhub" title="small hub"></span>
+				</span>
+				<span class="part">
+					4
+					<span class="knex-icon other-joint" title="joint"></span>
+				</span>
+				<span class="part">
+					137
+					<span class="knex-icon other-chain" title="chain"></span>
 				</span>
 		</p>
 	</div>
@@ -1768,12 +1768,12 @@
 					<span class="knex-icon rod-red" title="red"></span>
 				</span>
 				<span class="part">
-					34
-					<span class="knex-icon rod-gray" title="gray"></span>
-				</span>
-				<span class="part">
 					76
 					<span class="knex-icon rod-orange" title="orange"></span>
+				</span>
+				<span class="part">
+					34
+					<span class="knex-icon rod-gray" title="gray"></span>
 				</span>
 		</p>
 		<p>
@@ -1816,24 +1816,24 @@
 		</p>
 		<p>
 				<span class="part">
-					1
-					<span class="knex-icon other-mediumtyre" title="medium tyre"></span>
-				</span>
-				<span class="part">
-					2
-					<span class="knex-icon other-joint" title="joint"></span>
-				</span>
-				<span class="part">
-					2
-					<span class="knex-icon other-redgear" title="red gear"></span>
+					3
+					<span class="knex-icon other-washer" title="washer"></span>
 				</span>
 				<span class="part">
 					1
 					<span class="knex-icon other-mediumhub" title="medium hub"></span>
 				</span>
 				<span class="part">
-					3
-					<span class="knex-icon other-washer" title="washer"></span>
+					2
+					<span class="knex-icon other-joint" title="joint"></span>
+				</span>
+				<span class="part">
+					1
+					<span class="knex-icon other-mediumtyre" title="medium tyre"></span>
+				</span>
+				<span class="part">
+					2
+					<span class="knex-icon other-redgear" title="red gear"></span>
 				</span>
 		</p>
 	</div>
@@ -1872,12 +1872,12 @@
 					<span class="knex-icon rod-red" title="red"></span>
 				</span>
 				<span class="part">
-					12
-					<span class="knex-icon rod-gray" title="gray"></span>
-				</span>
-				<span class="part">
 					6
 					<span class="knex-icon rod-orange" title="orange"></span>
+				</span>
+				<span class="part">
+					12
+					<span class="knex-icon rod-gray" title="gray"></span>
 				</span>
 		</p>
 		<p>
@@ -1920,20 +1920,20 @@
 		</p>
 		<p>
 				<span class="part">
-					1
-					<span class="knex-icon other-mediumtyre" title="medium tyre"></span>
-				</span>
-				<span class="part">
-					2
-					<span class="knex-icon other-redgear" title="red gear"></span>
-				</span>
-				<span class="part">
 					3
 					<span class="knex-icon other-washer" title="washer"></span>
 				</span>
 				<span class="part">
 					1
 					<span class="knex-icon other-mediumhub" title="medium hub"></span>
+				</span>
+				<span class="part">
+					1
+					<span class="knex-icon other-mediumtyre" title="medium tyre"></span>
+				</span>
+				<span class="part">
+					2
+					<span class="knex-icon other-redgear" title="red gear"></span>
 				</span>
 		</p>
 	</div>
@@ -2048,12 +2048,12 @@
 					<span class="knex-icon rod-red" title="red"></span>
 				</span>
 				<span class="part">
-					22
-					<span class="knex-icon rod-gray" title="gray"></span>
-				</span>
-				<span class="part">
 					70
 					<span class="knex-icon rod-orange" title="orange"></span>
+				</span>
+				<span class="part">
+					22
+					<span class="knex-icon rod-gray" title="gray"></span>
 				</span>
 		</p>
 		<p>
@@ -2124,12 +2124,12 @@
 					<span class="knex-icon rod-red" title="red"></span>
 				</span>
 				<span class="part">
-					6
-					<span class="knex-icon rod-gray" title="gray"></span>
-				</span>
-				<span class="part">
 					22
 					<span class="knex-icon rod-orange" title="orange"></span>
+				</span>
+				<span class="part">
+					6
+					<span class="knex-icon rod-gray" title="gray"></span>
 				</span>
 		</p>
 		<p>
@@ -2186,12 +2186,12 @@
 					<span class="knex-icon rod-red" title="red"></span>
 				</span>
 				<span class="part">
-					8
-					<span class="knex-icon rod-gray" title="gray"></span>
-				</span>
-				<span class="part">
 					24
 					<span class="knex-icon rod-orange" title="orange"></span>
+				</span>
+				<span class="part">
+					8
+					<span class="knex-icon rod-gray" title="gray"></span>
 				</span>
 		</p>
 		<p>
@@ -2256,12 +2256,12 @@
 					<span class="knex-icon rod-red" title="red"></span>
 				</span>
 				<span class="part">
-					8
-					<span class="knex-icon rod-gray" title="gray"></span>
-				</span>
-				<span class="part">
 					24
 					<span class="knex-icon rod-orange" title="orange"></span>
+				</span>
+				<span class="part">
+					8
+					<span class="knex-icon rod-gray" title="gray"></span>
 				</span>
 		</p>
 		<p>
@@ -2376,20 +2376,20 @@
 					<span class="knex-icon rod-grayblack" title="gray (black)"></span>
 				</span>
 				<span class="part">
-					3
-					<span class="knex-icon rod-redtan" title="red (tan)"></span>
+					8
+					<span class="knex-icon rod-gray" title="gray"></span>
 				</span>
 				<span class="part">
 					1
 					<span class="knex-icon rod-whiteblack" title="white (black)"></span>
 				</span>
 				<span class="part">
-					8
-					<span class="knex-icon rod-gray" title="gray"></span>
-				</span>
-				<span class="part">
 					48
 					<span class="knex-icon rod-orange" title="orange"></span>
+				</span>
+				<span class="part">
+					3
+					<span class="knex-icon rod-redtan" title="red (tan)"></span>
 				</span>
 		</p>
 		<p>
@@ -2440,16 +2440,12 @@
 		</p>
 		<p>
 				<span class="part">
-					2
-					<span class="knex-icon other-redgear" title="red gear"></span>
+					102
+					<span class="knex-icon other-washer" title="washer"></span>
 				</span>
 				<span class="part">
 					1
 					<span class="knex-icon other-smallhub" title="small hub"></span>
-				</span>
-				<span class="part">
-					5
-					<span class="knex-icon other-yellowgear" title="yellow gear"></span>
 				</span>
 				<span class="part">
 					2
@@ -2457,11 +2453,15 @@
 				</span>
 				<span class="part">
 					5
-					<span class="knex-icon other-bluegear" title="blue gear"></span>
+					<span class="knex-icon other-yellowgear" title="yellow gear"></span>
 				</span>
 				<span class="part">
-					102
-					<span class="knex-icon other-washer" title="washer"></span>
+					2
+					<span class="knex-icon other-redgear" title="red gear"></span>
+				</span>
+				<span class="part">
+					5
+					<span class="knex-icon other-bluegear" title="blue gear"></span>
 				</span>
 		</p>
 	</div>
@@ -2504,20 +2504,20 @@
 					<span class="knex-icon rod-grayblack" title="gray (black)"></span>
 				</span>
 				<span class="part">
-					3
-					<span class="knex-icon rod-redtan" title="red (tan)"></span>
+					2
+					<span class="knex-icon rod-gray" title="gray"></span>
 				</span>
 				<span class="part">
 					1
 					<span class="knex-icon rod-whiteblack" title="white (black)"></span>
 				</span>
 				<span class="part">
-					2
-					<span class="knex-icon rod-gray" title="gray"></span>
-				</span>
-				<span class="part">
 					31
 					<span class="knex-icon rod-orange" title="orange"></span>
+				</span>
+				<span class="part">
+					3
+					<span class="knex-icon rod-redtan" title="red (tan)"></span>
 				</span>
 		</p>
 		<p>
@@ -2568,16 +2568,12 @@
 		</p>
 		<p>
 				<span class="part">
-					2
-					<span class="knex-icon other-redgear" title="red gear"></span>
+					102
+					<span class="knex-icon other-washer" title="washer"></span>
 				</span>
 				<span class="part">
 					1
 					<span class="knex-icon other-smallhub" title="small hub"></span>
-				</span>
-				<span class="part">
-					5
-					<span class="knex-icon other-yellowgear" title="yellow gear"></span>
 				</span>
 				<span class="part">
 					2
@@ -2585,11 +2581,15 @@
 				</span>
 				<span class="part">
 					5
-					<span class="knex-icon other-bluegear" title="blue gear"></span>
+					<span class="knex-icon other-yellowgear" title="yellow gear"></span>
 				</span>
 				<span class="part">
-					102
-					<span class="knex-icon other-washer" title="washer"></span>
+					2
+					<span class="knex-icon other-redgear" title="red gear"></span>
+				</span>
+				<span class="part">
+					5
+					<span class="knex-icon other-bluegear" title="blue gear"></span>
 				</span>
 		</p>
 	</div>
@@ -2628,12 +2628,12 @@
 					<span class="knex-icon rod-red" title="red"></span>
 				</span>
 				<span class="part">
-					1
-					<span class="knex-icon rod-gray" title="gray"></span>
-				</span>
-				<span class="part">
 					2
 					<span class="knex-icon rod-grayblack" title="gray (black)"></span>
+				</span>
+				<span class="part">
+					1
+					<span class="knex-icon rod-gray" title="gray"></span>
 				</span>
 		</p>
 		<p>
@@ -2676,8 +2676,8 @@
 		</p>
 		<p>
 				<span class="part">
-					2
-					<span class="knex-icon other-redgear" title="red gear"></span>
+					99
+					<span class="knex-icon other-washer" title="washer"></span>
 				</span>
 				<span class="part">
 					5
@@ -2688,8 +2688,8 @@
 					<span class="knex-icon other-yellowgear" title="yellow gear"></span>
 				</span>
 				<span class="part">
-					99
-					<span class="knex-icon other-washer" title="washer"></span>
+					2
+					<span class="knex-icon other-redgear" title="red gear"></span>
 				</span>
 		</p>
 	</div>
@@ -2861,16 +2861,16 @@
 		</p>
 		<p>
 				<span class="part">
-					2
-					<span class="knex-icon other-joint" title="joint"></span>
+					3
+					<span class="knex-icon other-washer" title="washer"></span>
 				</span>
 				<span class="part">
 					1
 					<span class="knex-icon other-smallhub" title="small hub"></span>
 				</span>
 				<span class="part">
-					3
-					<span class="knex-icon other-washer" title="washer"></span>
+					2
+					<span class="knex-icon other-joint" title="joint"></span>
 				</span>
 		</p>
 	</div>
@@ -2916,16 +2916,16 @@
 					<span class="knex-icon rod-red" title="red"></span>
 				</span>
 				<span class="part">
+					9
+					<span class="knex-icon rod-orange" title="orange"></span>
+				</span>
+				<span class="part">
 					3
 					<span class="knex-icon rod-redtan" title="red (tan)"></span>
 				</span>
 				<span class="part">
 					1
 					<span class="knex-icon rod-gray" title="gray"></span>
-				</span>
-				<span class="part">
-					9
-					<span class="knex-icon rod-orange" title="orange"></span>
 				</span>
 		</p>
 		<p>
@@ -3091,12 +3091,12 @@
 					<span class="knex-icon rod-red" title="red"></span>
 				</span>
 				<span class="part">
-					1
-					<span class="knex-icon rod-grayblack" title="gray (black)"></span>
-				</span>
-				<span class="part">
 					8
 					<span class="knex-icon rod-orange" title="orange"></span>
+				</span>
+				<span class="part">
+					1
+					<span class="knex-icon rod-grayblack" title="gray (black)"></span>
 				</span>
 		</p>
 		<p>
@@ -3551,12 +3551,12 @@
 					<span class="knex-icon rod-red" title="red"></span>
 				</span>
 				<span class="part">
-					6
-					<span class="knex-icon rod-gray" title="gray"></span>
-				</span>
-				<span class="part">
 					17
 					<span class="knex-icon rod-orange" title="orange"></span>
+				</span>
+				<span class="part">
+					6
+					<span class="knex-icon rod-gray" title="gray"></span>
 				</span>
 		</p>
 		<p>
@@ -3661,11 +3661,11 @@
 		<p>
 				<span class="part">
 					2
-					<span class="knex-icon other-mediumtyre" title="medium tyre"></span>
+					<span class="knex-icon other-mediumhub" title="medium hub"></span>
 				</span>
 				<span class="part">
 					2
-					<span class="knex-icon other-mediumhub" title="medium hub"></span>
+					<span class="knex-icon other-mediumtyre" title="medium tyre"></span>
 				</span>
 		</p>
 	</div>
@@ -3724,24 +3724,24 @@
 		</p>
 		<p>
 				<span class="part">
-					137
-					<span class="knex-icon other-chain" title="chain"></span>
+					8
+					<span class="knex-icon other-smallhub" title="small hub"></span>
 				</span>
 				<span class="part">
 					9
-					<span class="knex-icon other-mediumtyre" title="medium tyre"></span>
-				</span>
-				<span class="part">
-					8
-					<span class="knex-icon other-smallhub" title="small hub"></span>
+					<span class="knex-icon other-mediumhub" title="medium hub"></span>
 				</span>
 				<span class="part">
 					8
 					<span class="knex-icon other-smalltyre" title="small tyre"></span>
 				</span>
 				<span class="part">
+					137
+					<span class="knex-icon other-chain" title="chain"></span>
+				</span>
+				<span class="part">
 					9
-					<span class="knex-icon other-mediumhub" title="medium hub"></span>
+					<span class="knex-icon other-mediumtyre" title="medium tyre"></span>
 				</span>
 		</p>
 	</div>
