@@ -3,9 +3,10 @@
 
 % def render(e):
 	<div class="media">
+		% thumb_path = e.thumbnail.as_posix() if e.thumbnail else ''
 		% path = e.image.as_posix() if e.image else ''
 		<a class="pull-left" {{! 'href="' + path + '"' if path else ''}}>
-			<div class="media-object" style="width: 64px; height: 64px; background: gray url({{ path }}) center; background-size: cover"></div>
+			<div class="media-object" style="width: 64px; height: 64px; background: gray url({{ thumb_path }}) center; background-size: cover"></div>
 		</a>
 		<div class="media-body">
 			% if e.parts:
