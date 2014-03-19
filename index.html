@@ -26,11 +26,14 @@
 
 		$(function() {
 			$(window).scrollspy({target: ".the-sidebar", offset: 75 }).on('focused.bs.scrollspy', function(e) {
-				var matching = $('.part-lists > div').removeClass('active').filter(function() {
+				var matching = $('.part-lists > div, .part-images > div').removeClass('active').filter(function() {
 					return $(this).data('partsfor') == e.href;
 				});
 				console.log(matching, e.href);
 				matching.addClass('active');
+				if ('replaceState' in history) {
+					history.replaceState('', '', e.href);
+				}
 			});
 
 
@@ -135,8 +138,14 @@
 			.part-lists .part-list {
 				display: none;
 			}
-			.part-lists .active .part-list {
-				display: block;
+			.part-images {
+				position: absolute;
+				bottom: 0;
+				left: 0;
+				right: 0;
+			}
+			.part-images .part-image {
+				display: none;
 			}
 
 			@media (min-width:992px) {
@@ -152,6 +161,12 @@
 					position: fixed;
 					top: 20px;
 					bottom: 20px;
+				}
+				.the-sidebar.affix .part-images .part-image.active {
+					display: block;
+				}
+				.the-sidebar.affix .part-lists .active .part-list {
+					display: block;
 				}
 
 				.the-sidebar.affix-bottom {
@@ -310,7 +325,7 @@
 			}
 
 			.jumbotron.main {
-				background-image: url(9.medium.jpg);
+				background-image: url(9.jpg);
 				background-position: top;
 				background-size: cover;
 				height: 100%;
@@ -489,13 +504,6 @@
 		</p>
 	</div>
 
-	<!-- <section class="panel panel-default parts-panel">
-		<div class="panel-body" style="white-space: nowrap">
-				<div class="row" style="margin-bottom: -15px; margin-top: 15px;">
-					<img style="width: 100%" src="parts.jpg" />
-				</div>
-		</div>
-	</section> -->
 				<h1>4832 pieces</h1>
 			</div>
 		</div>
@@ -505,8 +513,8 @@
 				<div class="col-md-9">
 	<div class="media" id="spiral">
 
-			<a class="pull-left" href="1.spiral/1.jpg">
-				<div class="media-object" style="width: 64px; height: 64px; background: gray url(1.spiral/3.thumb.jpg) center; background-size: cover"></div>
+			<a class="pull-left" >
+				<div class="media-object" style="width: 64px; height: 64px; background: gray url() center; background-size: cover"></div>
 			</a>
 		<div class="media-body">
 			<h4 class="media-heading">spiral</h4>
@@ -553,8 +561,8 @@
 
 	<div class="media" id="frame-base">
 
-			<a class="pull-left" href="2.frame/1.base/1.jpg">
-				<div class="media-object" style="width: 64px; height: 64px; background: gray url(2.frame/1.base/15.thumb.jpg) center; background-size: cover"></div>
+			<a class="pull-left" >
+				<div class="media-object" style="width: 64px; height: 64px; background: gray url() center; background-size: cover"></div>
 			</a>
 		<div class="media-body">
 			<h4 class="media-heading">base</h4>
@@ -713,8 +721,8 @@
 	</div>
 	<div class="media" id="frame-tower">
 
-			<a class="pull-left" href="2.frame/2.tower/1.bottom/1.jpg">
-				<div class="media-object" style="width: 64px; height: 64px; background: gray url(2.frame/2.tower/11.thumb.jpg) center; background-size: cover"></div>
+			<a class="pull-left" >
+				<div class="media-object" style="width: 64px; height: 64px; background: gray url() center; background-size: cover"></div>
 			</a>
 		<div class="media-body">
 			<h4 class="media-heading">tower</h4>
@@ -835,24 +843,24 @@
 	</div>
 	<div class="media" id="top">
 
-			<a class="pull-left" href="3.top/1.inside/1.mechanism/1.jpg">
-				<div class="media-object" style="width: 64px; height: 64px; background: gray url(3.top/6.thumb.jpg) center; background-size: cover"></div>
+			<a class="pull-left" >
+				<div class="media-object" style="width: 64px; height: 64px; background: gray url() center; background-size: cover"></div>
 			</a>
 		<div class="media-body">
 			<h4 class="media-heading">top</h4>
 
 	<div class="media" id="top-inside">
 
-			<a class="pull-left" href="3.top/1.inside/1.mechanism/1.jpg">
-				<div class="media-object" style="width: 64px; height: 64px; background: gray url(3.top/1.inside/13.thumb.jpg) center; background-size: cover"></div>
+			<a class="pull-left" >
+				<div class="media-object" style="width: 64px; height: 64px; background: gray url() center; background-size: cover"></div>
 			</a>
 		<div class="media-body">
 			<h4 class="media-heading">inside</h4>
 
 	<div class="media" id="top-inside-mechanism">
 
-			<a class="pull-left" href="3.top/1.inside/1.mechanism/1.jpg">
-				<div class="media-object" style="width: 64px; height: 64px; background: gray url(3.top/1.inside/1.mechanism/20.thumb.jpg) center; background-size: cover"></div>
+			<a class="pull-left" >
+				<div class="media-object" style="width: 64px; height: 64px; background: gray url() center; background-size: cover"></div>
 			</a>
 		<div class="media-body">
 			<h4 class="media-heading">mechanism</h4>
@@ -1061,8 +1069,8 @@
 	</div>
 	<div class="media" id="top-inside-front">
 
-			<a class="pull-left" href="3.top/1.inside/2.front/1.jpg">
-				<div class="media-object" style="width: 64px; height: 64px; background: gray url(3.top/1.inside/2.front/2.thumb.jpg) center; background-size: cover"></div>
+			<a class="pull-left" >
+				<div class="media-object" style="width: 64px; height: 64px; background: gray url() center; background-size: cover"></div>
 			</a>
 		<div class="media-body">
 			<h4 class="media-heading">front</h4>
@@ -1091,8 +1099,8 @@
 	</div>
 	<div class="media" id="top-inside-back">
 
-			<a class="pull-left" href="3.top/1.inside/3.back/1.jpg">
-				<div class="media-object" style="width: 64px; height: 64px; background: gray url(3.top/1.inside/3.back/2.thumb.jpg) center; background-size: cover"></div>
+			<a class="pull-left" >
+				<div class="media-object" style="width: 64px; height: 64px; background: gray url() center; background-size: cover"></div>
 			</a>
 		<div class="media-body">
 			<h4 class="media-heading">back</h4>
@@ -1121,8 +1129,8 @@
 	</div>
 	<div class="media" id="top-inside-channel">
 
-			<a class="pull-left" href="3.top/1.inside/4.channel/1.jpg">
-				<div class="media-object" style="width: 64px; height: 64px; background: gray url(3.top/1.inside/4.channel/3.thumb.jpg) center; background-size: cover"></div>
+			<a class="pull-left" >
+				<div class="media-object" style="width: 64px; height: 64px; background: gray url() center; background-size: cover"></div>
 			</a>
 		<div class="media-body">
 			<h4 class="media-heading">channel</h4>
@@ -1161,8 +1169,8 @@
 	</div>
 	<div class="media" id="top-inside-right">
 
-			<a class="pull-left" href="3.top/1.inside/5.right/1.jpg">
-				<div class="media-object" style="width: 64px; height: 64px; background: gray url(3.top/1.inside/5.right/3.thumb.JPG) center; background-size: cover"></div>
+			<a class="pull-left" >
+				<div class="media-object" style="width: 64px; height: 64px; background: gray url() center; background-size: cover"></div>
 			</a>
 		<div class="media-body">
 			<h4 class="media-heading">right</h4>
@@ -1201,8 +1209,8 @@
 	</div>
 	<div class="media" id="top-inside-left">
 
-			<a class="pull-left" href="3.top/1.inside/6.left/1.jpg">
-				<div class="media-object" style="width: 64px; height: 64px; background: gray url(3.top/1.inside/6.left/3.thumb.jpg) center; background-size: cover"></div>
+			<a class="pull-left" >
+				<div class="media-object" style="width: 64px; height: 64px; background: gray url() center; background-size: cover"></div>
 			</a>
 		<div class="media-body">
 			<h4 class="media-heading">left</h4>
@@ -1241,8 +1249,8 @@
 	</div>
 	<div class="media" id="top-inside-face">
 
-			<a class="pull-left" href="3.top/1.inside/7.face/1.jpg">
-				<div class="media-object" style="width: 64px; height: 64px; background: gray url(3.top/1.inside/7.face/3.thumb.jpg) center; background-size: cover"></div>
+			<a class="pull-left" >
+				<div class="media-object" style="width: 64px; height: 64px; background: gray url() center; background-size: cover"></div>
 			</a>
 		<div class="media-body">
 			<h4 class="media-heading">face</h4>
@@ -1333,8 +1341,8 @@
 	</div>
 	<div class="media" id="top-roof">
 
-			<a class="pull-left" href="3.top/2.roof/1.front/1.jpg">
-				<div class="media-object" style="width: 64px; height: 64px; background: gray url(3.top/2.roof/3.thumb.jpg) center; background-size: cover"></div>
+			<a class="pull-left" >
+				<div class="media-object" style="width: 64px; height: 64px; background: gray url() center; background-size: cover"></div>
 			</a>
 		<div class="media-body">
 			<h4 class="media-heading">roof</h4>
@@ -1415,8 +1423,8 @@
 	</div>
 	<div class="media" id="pendulum">
 
-			<a class="pull-left" href="4.pendulum/1.jpg">
-				<div class="media-object" style="width: 64px; height: 64px; background: gray url(4.pendulum/3.thumb.jpg) center; background-size: cover"></div>
+			<a class="pull-left" >
+				<div class="media-object" style="width: 64px; height: 64px; background: gray url() center; background-size: cover"></div>
 			</a>
 		<div class="media-body">
 			<h4 class="media-heading">pendulum</h4>
@@ -1455,8 +1463,8 @@
 	</div>
 	<div class="media" id="weight">
 
-			<a class="pull-left" href="5.weight/1.jpg">
-				<div class="media-object" style="width: 64px; height: 64px; background: gray url(5.weight/3.thumb.jpg) center; background-size: cover"></div>
+			<a class="pull-left" >
+				<div class="media-object" style="width: 64px; height: 64px; background: gray url() center; background-size: cover"></div>
 			</a>
 		<div class="media-body">
 			<h4 class="media-heading">weight</h4>
@@ -1679,8 +1687,7 @@
 								</ul>
 							</div>
 							<div class="col-lg-4 col-md-6 part-lists">
-
-	<div data-partsfor="#spiral">
+										<div data-partsfor="#spiral">
 	<div class="part-list">
 		<p>
 				<span class="part">
@@ -1722,33 +1729,14 @@
 		</p>
 	</div>
 
-	<!-- <section class="panel panel-default parts-panel">
-		<div class="panel-body" style="white-space: nowrap">
-				<div class="row" style="margin-bottom: -15px; margin-top: 15px;">
-					<img style="width: 100%" src="1.spiral/parts.jpg" />
-				</div>
-		</div>
-	</section> -->
-	</div>
-
-
-	<div data-partsfor="#spiral-1">
-	</div>
-
-
-
-	<div data-partsfor="#spiral-2">
-	</div>
-
-
-
-	<div data-partsfor="#spiral-3">
-	</div>
-
-
-
-
-	<div data-partsfor="#frame">
+										</div>
+										<div data-partsfor="#spiral-1">
+										</div>
+										<div data-partsfor="#spiral-2">
+										</div>
+										<div data-partsfor="#spiral-3">
+										</div>
+										<div data-partsfor="#frame">
 	<div class="part-list">
 		<p>
 				<span class="part">
@@ -1842,17 +1830,8 @@
 		</p>
 	</div>
 
-	<!-- <section class="panel panel-default parts-panel">
-		<div class="panel-body" style="white-space: nowrap">
-				<div class="row" style="margin-bottom: -15px; margin-top: 15px;">
-					<img style="width: 100%" src="2.frame/parts.jpg" />
-				</div>
-		</div>
-	</section> -->
-	</div>
-
-
-	<div data-partsfor="#frame-base">
+										</div>
+										<div data-partsfor="#frame-base">
 	<div class="part-list">
 		<p>
 				<span class="part">
@@ -1942,93 +1921,38 @@
 		</p>
 	</div>
 
-	<!-- <section class="panel panel-default parts-panel">
-		<div class="panel-body" style="white-space: nowrap">
-				<div class="row" style="margin-bottom: -15px; margin-top: 15px;">
-					<img style="width: 100%" src="2.frame/1.base/parts.jpg" />
-				</div>
-		</div>
-	</section> -->
-	</div>
-
-
-	<div data-partsfor="#frame-base-1">
-	</div>
-
-
-
-	<div data-partsfor="#frame-base-2">
-	</div>
-
-
-
-	<div data-partsfor="#frame-base-3">
-	</div>
-
-
-
-	<div data-partsfor="#frame-base-4">
-	</div>
-
-
-
-	<div data-partsfor="#frame-base-5">
-	</div>
-
-
-
-	<div data-partsfor="#frame-base-6">
-	</div>
-
-
-
-	<div data-partsfor="#frame-base-7">
-	</div>
-
-
-
-	<div data-partsfor="#frame-base-8">
-	</div>
-
-
-
-	<div data-partsfor="#frame-base-9">
-	</div>
-
-
-
-	<div data-partsfor="#frame-base-10">
-	</div>
-
-
-
-	<div data-partsfor="#frame-base-11">
-	</div>
-
-
-
-	<div data-partsfor="#frame-base-12">
-	</div>
-
-
-
-	<div data-partsfor="#frame-base-13">
-	</div>
-
-
-
-	<div data-partsfor="#frame-base-14">
-	</div>
-
-
-
-	<div data-partsfor="#frame-base-15">
-	</div>
-
-
-
-
-	<div data-partsfor="#frame-tower">
+										</div>
+										<div data-partsfor="#frame-base-1">
+										</div>
+										<div data-partsfor="#frame-base-2">
+										</div>
+										<div data-partsfor="#frame-base-3">
+										</div>
+										<div data-partsfor="#frame-base-4">
+										</div>
+										<div data-partsfor="#frame-base-5">
+										</div>
+										<div data-partsfor="#frame-base-6">
+										</div>
+										<div data-partsfor="#frame-base-7">
+										</div>
+										<div data-partsfor="#frame-base-8">
+										</div>
+										<div data-partsfor="#frame-base-9">
+										</div>
+										<div data-partsfor="#frame-base-10">
+										</div>
+										<div data-partsfor="#frame-base-11">
+										</div>
+										<div data-partsfor="#frame-base-12">
+										</div>
+										<div data-partsfor="#frame-base-13">
+										</div>
+										<div data-partsfor="#frame-base-14">
+										</div>
+										<div data-partsfor="#frame-base-15">
+										</div>
+										<div data-partsfor="#frame-tower">
 	<div class="part-list">
 		<p>
 				<span class="part">
@@ -2094,17 +2018,8 @@
 		</p>
 	</div>
 
-	<!-- <section class="panel panel-default parts-panel">
-		<div class="panel-body" style="white-space: nowrap">
-				<div class="row" style="margin-bottom: -15px; margin-top: 15px;">
-					<img style="width: 100%" src="2.frame/2.tower/parts.jpg" />
-				</div>
-		</div>
-	</section> -->
-	</div>
-
-
-	<div data-partsfor="#frame-tower-bottom">
+										</div>
+										<div data-partsfor="#frame-tower-bottom">
 	<div class="part-list">
 		<p>
 				<span class="part">
@@ -2158,15 +2073,8 @@
 		</p>
 	</div>
 
-	<!-- <section class="panel panel-default parts-panel">
-		<div class="panel-body" style="white-space: nowrap">
-		</div>
-	</section> -->
-	</div>
-
-
-
-	<div data-partsfor="#frame-tower-middle">
+										</div>
+										<div data-partsfor="#frame-tower-middle">
 	<div class="part-list">
 		<p>
 				<span class="part">
@@ -2228,15 +2136,8 @@
 		</p>
 	</div>
 
-	<!-- <section class="panel panel-default parts-panel">
-		<div class="panel-body" style="white-space: nowrap">
-		</div>
-	</section> -->
-	</div>
-
-
-
-	<div data-partsfor="#frame-tower-top">
+										</div>
+										<div data-partsfor="#frame-tower-top">
 	<div class="part-list">
 		<p>
 				<span class="part">
@@ -2302,57 +2203,24 @@
 		</p>
 	</div>
 
-	<!-- <section class="panel panel-default parts-panel">
-		<div class="panel-body" style="white-space: nowrap">
-		</div>
-	</section> -->
-	</div>
-
-
-
-	<div data-partsfor="#frame-tower-4">
-	</div>
-
-
-
-	<div data-partsfor="#frame-tower-5">
-	</div>
-
-
-
-	<div data-partsfor="#frame-tower-6">
-	</div>
-
-
-
-	<div data-partsfor="#frame-tower-7">
-	</div>
-
-
-
-	<div data-partsfor="#frame-tower-8">
-	</div>
-
-
-
-	<div data-partsfor="#frame-tower-9">
-	</div>
-
-
-
-	<div data-partsfor="#frame-tower-10">
-	</div>
-
-
-
-	<div data-partsfor="#frame-tower-11">
-	</div>
-
-
-
-
-
-	<div data-partsfor="#top">
+										</div>
+										<div data-partsfor="#frame-tower-4">
+										</div>
+										<div data-partsfor="#frame-tower-5">
+										</div>
+										<div data-partsfor="#frame-tower-6">
+										</div>
+										<div data-partsfor="#frame-tower-7">
+										</div>
+										<div data-partsfor="#frame-tower-8">
+										</div>
+										<div data-partsfor="#frame-tower-9">
+										</div>
+										<div data-partsfor="#frame-tower-10">
+										</div>
+										<div data-partsfor="#frame-tower-11">
+										</div>
+										<div data-partsfor="#top">
 	<div class="part-list">
 		<p>
 				<span class="part">
@@ -2470,17 +2338,8 @@
 		</p>
 	</div>
 
-	<!-- <section class="panel panel-default parts-panel">
-		<div class="panel-body" style="white-space: nowrap">
-				<div class="row" style="margin-bottom: -15px; margin-top: 15px;">
-					<img style="width: 100%" src="3.top/parts.jpg" />
-				</div>
-		</div>
-	</section> -->
-	</div>
-
-
-	<div data-partsfor="#top-inside">
+										</div>
+										<div data-partsfor="#top-inside">
 	<div class="part-list">
 		<p>
 				<span class="part">
@@ -2598,17 +2457,8 @@
 		</p>
 	</div>
 
-	<!-- <section class="panel panel-default parts-panel">
-		<div class="panel-body" style="white-space: nowrap">
-				<div class="row" style="margin-bottom: -15px; margin-top: 15px;">
-					<img style="width: 100%" src="3.top/1.inside/parts.jpg" />
-				</div>
-		</div>
-	</section> -->
-	</div>
-
-
-	<div data-partsfor="#top-inside-mechanism">
+										</div>
+										<div data-partsfor="#top-inside-mechanism">
 	<div class="part-list">
 		<p>
 				<span class="part">
@@ -2698,118 +2548,48 @@
 		</p>
 	</div>
 
-	<!-- <section class="panel panel-default parts-panel">
-		<div class="panel-body" style="white-space: nowrap">
-				<div class="row" style="margin-bottom: -15px; margin-top: 15px;">
-					<img style="width: 100%" src="3.top/1.inside/1.mechanism/parts.jpg" />
-				</div>
-		</div>
-	</section> -->
-	</div>
-
-
-	<div data-partsfor="#top-inside-mechanism-1">
-	</div>
-
-
-
-	<div data-partsfor="#top-inside-mechanism-2">
-	</div>
-
-
-
-	<div data-partsfor="#top-inside-mechanism-3">
-	</div>
-
-
-
-	<div data-partsfor="#top-inside-mechanism-4">
-	</div>
-
-
-
-	<div data-partsfor="#top-inside-mechanism-5">
-	</div>
-
-
-
-	<div data-partsfor="#top-inside-mechanism-6">
-	</div>
-
-
-
-	<div data-partsfor="#top-inside-mechanism-7">
-	</div>
-
-
-
-	<div data-partsfor="#top-inside-mechanism-8">
-	</div>
-
-
-
-	<div data-partsfor="#top-inside-mechanism-9">
-	</div>
-
-
-
-	<div data-partsfor="#top-inside-mechanism-10">
-	</div>
-
-
-
-	<div data-partsfor="#top-inside-mechanism-11">
-	</div>
-
-
-
-	<div data-partsfor="#top-inside-mechanism-12">
-	</div>
-
-
-
-	<div data-partsfor="#top-inside-mechanism-13">
-	</div>
-
-
-
-	<div data-partsfor="#top-inside-mechanism-14">
-	</div>
-
-
-
-	<div data-partsfor="#top-inside-mechanism-15">
-	</div>
-
-
-
-	<div data-partsfor="#top-inside-mechanism-16">
-	</div>
-
-
-
-	<div data-partsfor="#top-inside-mechanism-17">
-	</div>
-
-
-
-	<div data-partsfor="#top-inside-mechanism-18">
-	</div>
-
-
-
-	<div data-partsfor="#top-inside-mechanism-19">
-	</div>
-
-
-
-	<div data-partsfor="#top-inside-mechanism-20">
-	</div>
-
-
-
-
-	<div data-partsfor="#top-inside-front">
+										</div>
+										<div data-partsfor="#top-inside-mechanism-1">
+										</div>
+										<div data-partsfor="#top-inside-mechanism-2">
+										</div>
+										<div data-partsfor="#top-inside-mechanism-3">
+										</div>
+										<div data-partsfor="#top-inside-mechanism-4">
+										</div>
+										<div data-partsfor="#top-inside-mechanism-5">
+										</div>
+										<div data-partsfor="#top-inside-mechanism-6">
+										</div>
+										<div data-partsfor="#top-inside-mechanism-7">
+										</div>
+										<div data-partsfor="#top-inside-mechanism-8">
+										</div>
+										<div data-partsfor="#top-inside-mechanism-9">
+										</div>
+										<div data-partsfor="#top-inside-mechanism-10">
+										</div>
+										<div data-partsfor="#top-inside-mechanism-11">
+										</div>
+										<div data-partsfor="#top-inside-mechanism-12">
+										</div>
+										<div data-partsfor="#top-inside-mechanism-13">
+										</div>
+										<div data-partsfor="#top-inside-mechanism-14">
+										</div>
+										<div data-partsfor="#top-inside-mechanism-15">
+										</div>
+										<div data-partsfor="#top-inside-mechanism-16">
+										</div>
+										<div data-partsfor="#top-inside-mechanism-17">
+										</div>
+										<div data-partsfor="#top-inside-mechanism-18">
+										</div>
+										<div data-partsfor="#top-inside-mechanism-19">
+										</div>
+										<div data-partsfor="#top-inside-mechanism-20">
+										</div>
+										<div data-partsfor="#top-inside-front">
 	<div class="part-list">
 		<p>
 				<span class="part">
@@ -2879,28 +2659,12 @@
 		</p>
 	</div>
 
-	<!-- <section class="panel panel-default parts-panel">
-		<div class="panel-body" style="white-space: nowrap">
-				<div class="row" style="margin-bottom: -15px; margin-top: 15px;">
-					<img style="width: 100%" src="3.top/1.inside/2.front/parts.jpg" />
-				</div>
-		</div>
-	</section> -->
-	</div>
-
-
-	<div data-partsfor="#top-inside-front-1">
-	</div>
-
-
-
-	<div data-partsfor="#top-inside-front-2">
-	</div>
-
-
-
-
-	<div data-partsfor="#top-inside-back">
+										</div>
+										<div data-partsfor="#top-inside-front-1">
+										</div>
+										<div data-partsfor="#top-inside-front-2">
+										</div>
+										<div data-partsfor="#top-inside-back">
 	<div class="part-list">
 		<p>
 				<span class="part">
@@ -2970,28 +2734,12 @@
 		</p>
 	</div>
 
-	<!-- <section class="panel panel-default parts-panel">
-		<div class="panel-body" style="white-space: nowrap">
-				<div class="row" style="margin-bottom: -15px; margin-top: 15px;">
-					<img style="width: 100%" src="3.top/1.inside/3.back/parts.jpg" />
-				</div>
-		</div>
-	</section> -->
-	</div>
-
-
-	<div data-partsfor="#top-inside-back-1">
-	</div>
-
-
-
-	<div data-partsfor="#top-inside-back-2">
-	</div>
-
-
-
-
-	<div data-partsfor="#top-inside-channel">
+										</div>
+										<div data-partsfor="#top-inside-back-1">
+										</div>
+										<div data-partsfor="#top-inside-back-2">
+										</div>
+										<div data-partsfor="#top-inside-channel">
 	<div class="part-list">
 		<p>
 				<span class="part">
@@ -3045,33 +2793,14 @@
 		</p>
 	</div>
 
-	<!-- <section class="panel panel-default parts-panel">
-		<div class="panel-body" style="white-space: nowrap">
-				<div class="row" style="margin-bottom: -15px; margin-top: 15px;">
-					<img style="width: 100%" src="3.top/1.inside/4.channel/parts.jpg" />
-				</div>
-		</div>
-	</section> -->
-	</div>
-
-
-	<div data-partsfor="#top-inside-channel-1">
-	</div>
-
-
-
-	<div data-partsfor="#top-inside-channel-2">
-	</div>
-
-
-
-	<div data-partsfor="#top-inside-channel-3">
-	</div>
-
-
-
-
-	<div data-partsfor="#top-inside-right">
+										</div>
+										<div data-partsfor="#top-inside-channel-1">
+										</div>
+										<div data-partsfor="#top-inside-channel-2">
+										</div>
+										<div data-partsfor="#top-inside-channel-3">
+										</div>
+										<div data-partsfor="#top-inside-right">
 	<div class="part-list">
 		<p>
 				<span class="part">
@@ -3153,33 +2882,14 @@
 		</p>
 	</div>
 
-	<!-- <section class="panel panel-default parts-panel">
-		<div class="panel-body" style="white-space: nowrap">
-				<div class="row" style="margin-bottom: -15px; margin-top: 15px;">
-					<img style="width: 100%" src="3.top/1.inside/5.right/parts.jpg" />
-				</div>
-		</div>
-	</section> -->
-	</div>
-
-
-	<div data-partsfor="#top-inside-right-1">
-	</div>
-
-
-
-	<div data-partsfor="#top-inside-right-2">
-	</div>
-
-
-
-	<div data-partsfor="#top-inside-right-3">
-	</div>
-
-
-
-
-	<div data-partsfor="#top-inside-left">
+										</div>
+										<div data-partsfor="#top-inside-right-1">
+										</div>
+										<div data-partsfor="#top-inside-right-2">
+										</div>
+										<div data-partsfor="#top-inside-right-3">
+										</div>
+										<div data-partsfor="#top-inside-left">
 	<div class="part-list">
 		<p>
 				<span class="part">
@@ -3233,33 +2943,14 @@
 		</p>
 	</div>
 
-	<!-- <section class="panel panel-default parts-panel">
-		<div class="panel-body" style="white-space: nowrap">
-				<div class="row" style="margin-bottom: -15px; margin-top: 15px;">
-					<img style="width: 100%" src="3.top/1.inside/6.left/parts.jpg" />
-				</div>
-		</div>
-	</section> -->
-	</div>
-
-
-	<div data-partsfor="#top-inside-left-1">
-	</div>
-
-
-
-	<div data-partsfor="#top-inside-left-2">
-	</div>
-
-
-
-	<div data-partsfor="#top-inside-left-3">
-	</div>
-
-
-
-
-	<div data-partsfor="#top-inside-face">
+										</div>
+										<div data-partsfor="#top-inside-left-1">
+										</div>
+										<div data-partsfor="#top-inside-left-2">
+										</div>
+										<div data-partsfor="#top-inside-left-3">
+										</div>
+										<div data-partsfor="#top-inside-face">
 	<div class="part-list">
 		<p>
 				<span class="part">
@@ -3309,33 +3000,14 @@
 		</p>
 	</div>
 
-	<!-- <section class="panel panel-default parts-panel">
-		<div class="panel-body" style="white-space: nowrap">
-				<div class="row" style="margin-bottom: -15px; margin-top: 15px;">
-					<img style="width: 100%" src="3.top/1.inside/7.face/parts.jpg" />
-				</div>
-		</div>
-	</section> -->
-	</div>
-
-
-	<div data-partsfor="#top-inside-face-1">
-	</div>
-
-
-
-	<div data-partsfor="#top-inside-face-2">
-	</div>
-
-
-
-	<div data-partsfor="#top-inside-face-3">
-	</div>
-
-
-
-
-	<div data-partsfor="#top-inside-hands">
+										</div>
+										<div data-partsfor="#top-inside-face-1">
+										</div>
+										<div data-partsfor="#top-inside-face-2">
+										</div>
+										<div data-partsfor="#top-inside-face-3">
+										</div>
+										<div data-partsfor="#top-inside-hands">
 	<div class="part-list">
 		<p>
 				<span class="part">
@@ -3361,36 +3033,16 @@
 		</p>
 	</div>
 
-	<!-- <section class="panel panel-default parts-panel">
-		<div class="panel-body" style="white-space: nowrap">
-		</div>
-	</section> -->
-	</div>
-
-
-
-	<div data-partsfor="#top-inside-10">
-	</div>
-
-
-
-	<div data-partsfor="#top-inside-11">
-	</div>
-
-
-
-	<div data-partsfor="#top-inside-12">
-	</div>
-
-
-
-	<div data-partsfor="#top-inside-13">
-	</div>
-
-
-
-
-	<div data-partsfor="#top-roof">
+										</div>
+										<div data-partsfor="#top-inside-10">
+										</div>
+										<div data-partsfor="#top-inside-11">
+										</div>
+										<div data-partsfor="#top-inside-12">
+										</div>
+										<div data-partsfor="#top-inside-13">
+										</div>
+										<div data-partsfor="#top-roof">
 	<div class="part-list">
 		<p>
 				<span class="part">
@@ -3464,17 +3116,8 @@
 		</p>
 	</div>
 
-	<!-- <section class="panel panel-default parts-panel">
-		<div class="panel-body" style="white-space: nowrap">
-				<div class="row" style="margin-bottom: -15px; margin-top: 15px;">
-					<img style="width: 100%" src="3.top/2.roof/parts.jpg" />
-				</div>
-		</div>
-	</section> -->
-	</div>
-
-
-	<div data-partsfor="#top-roof-front">
+										</div>
+										<div data-partsfor="#top-roof-front">
 	<div class="part-list">
 		<p>
 				<span class="part">
@@ -3524,18 +3167,8 @@
 		</p>
 	</div>
 
-	<!-- <section class="panel panel-default parts-panel">
-		<div class="panel-body" style="white-space: nowrap">
-				<div class="row" style="margin-bottom: -15px; margin-top: 15px;">
-					<img style="width: 100%" src="3.top/2.roof/1.front/parts.jpg" />
-				</div>
-		</div>
-	</section> -->
-	</div>
-
-
-
-	<div data-partsfor="#top-roof-top">
+										</div>
+										<div data-partsfor="#top-roof-top">
 	<div class="part-list">
 		<p>
 				<span class="part">
@@ -3597,42 +3230,18 @@
 		</p>
 	</div>
 
-	<!-- <section class="panel panel-default parts-panel">
-		<div class="panel-body" style="white-space: nowrap">
-		</div>
-	</section> -->
-	</div>
-
-
-
-	<div data-partsfor="#top-roof-3">
-	</div>
-
-
-
-
-	<div data-partsfor="#top-3">
-	</div>
-
-
-
-	<div data-partsfor="#top-4">
-	</div>
-
-
-
-	<div data-partsfor="#top-5">
-	</div>
-
-
-
-	<div data-partsfor="#top-6">
-	</div>
-
-
-
-
-	<div data-partsfor="#pendulum">
+										</div>
+										<div data-partsfor="#top-roof-3">
+										</div>
+										<div data-partsfor="#top-3">
+										</div>
+										<div data-partsfor="#top-4">
+										</div>
+										<div data-partsfor="#top-5">
+										</div>
+										<div data-partsfor="#top-6">
+										</div>
+										<div data-partsfor="#pendulum">
 	<div class="part-list">
 		<p>
 				<span class="part">
@@ -3674,33 +3283,14 @@
 		</p>
 	</div>
 
-	<!-- <section class="panel panel-default parts-panel">
-		<div class="panel-body" style="white-space: nowrap">
-				<div class="row" style="margin-bottom: -15px; margin-top: 15px;">
-					<img style="width: 100%" src="4.pendulum/parts.jpg" />
-				</div>
-		</div>
-	</section> -->
-	</div>
-
-
-	<div data-partsfor="#pendulum-1">
-	</div>
-
-
-
-	<div data-partsfor="#pendulum-2">
-	</div>
-
-
-
-	<div data-partsfor="#pendulum-3">
-	</div>
-
-
-
-
-	<div data-partsfor="#weight">
+										</div>
+										<div data-partsfor="#pendulum-1">
+										</div>
+										<div data-partsfor="#pendulum-2">
+										</div>
+										<div data-partsfor="#pendulum-3">
+										</div>
+										<div data-partsfor="#weight">
 	<div class="part-list">
 		<p>
 				<span class="part">
@@ -3750,49 +3340,107 @@
 		</p>
 	</div>
 
-	<!-- <section class="panel panel-default parts-panel">
-		<div class="panel-body" style="white-space: nowrap">
-				<div class="row" style="margin-bottom: -15px; margin-top: 15px;">
-					<img style="width: 100%" src="5.weight/parts.jpg" />
-				</div>
-		</div>
-	</section> -->
-	</div>
-
-
-	<div data-partsfor="#weight-1">
-	</div>
-
-
-
-	<div data-partsfor="#weight-chain">
-	</div>
-
-
-
-	<div data-partsfor="#weight-3">
-	</div>
-
-
-
-
-	<div data-partsfor="#7">
-	</div>
-
-
-
-	<div data-partsfor="#8">
-	</div>
-
-
-
-	<div data-partsfor="#9">
-	</div>
-
-
+										</div>
+										<div data-partsfor="#weight-1">
+										</div>
+										<div data-partsfor="#weight-chain">
+										</div>
+										<div data-partsfor="#weight-3">
+										</div>
+										<div data-partsfor="#7">
+										</div>
+										<div data-partsfor="#8">
+										</div>
+										<div data-partsfor="#9">
+										</div>
 							</div>
 						</div>
 						<div class="part-images">
+										<div class="part-image" data-partsfor="#spiral">
+											<a href="1.spiral/parts.jpg">
+												<img style="width: 100%" src="1.spiral/parts.medium.jpg" />
+											</a>
+										</div>
+										<div class="part-image" data-partsfor="#frame">
+											<a href="2.frame/parts.jpg">
+												<img style="width: 100%" src="2.frame/parts.medium.jpg" />
+											</a>
+										</div>
+										<div class="part-image" data-partsfor="#frame-base">
+											<a href="2.frame/1.base/parts.jpg">
+												<img style="width: 100%" src="2.frame/1.base/parts.medium.jpg" />
+											</a>
+										</div>
+										<div class="part-image" data-partsfor="#frame-tower">
+											<a href="2.frame/2.tower/parts.jpg">
+												<img style="width: 100%" src="2.frame/2.tower/parts.medium.jpg" />
+											</a>
+										</div>
+										<div class="part-image" data-partsfor="#top">
+											<a href="3.top/parts.jpg">
+												<img style="width: 100%" src="3.top/parts.medium.jpg" />
+											</a>
+										</div>
+										<div class="part-image" data-partsfor="#top-inside">
+											<a href="3.top/1.inside/parts.jpg">
+												<img style="width: 100%" src="3.top/1.inside/parts.medium.jpg" />
+											</a>
+										</div>
+										<div class="part-image" data-partsfor="#top-inside-mechanism">
+											<a href="3.top/1.inside/1.mechanism/parts.jpg">
+												<img style="width: 100%" src="3.top/1.inside/1.mechanism/parts.medium.jpg" />
+											</a>
+										</div>
+										<div class="part-image" data-partsfor="#top-inside-front">
+											<a href="3.top/1.inside/2.front/parts.jpg">
+												<img style="width: 100%" src="3.top/1.inside/2.front/parts.medium.jpg" />
+											</a>
+										</div>
+										<div class="part-image" data-partsfor="#top-inside-back">
+											<a href="3.top/1.inside/3.back/parts.jpg">
+												<img style="width: 100%" src="3.top/1.inside/3.back/parts.medium.jpg" />
+											</a>
+										</div>
+										<div class="part-image" data-partsfor="#top-inside-channel">
+											<a href="3.top/1.inside/4.channel/parts.jpg">
+												<img style="width: 100%" src="3.top/1.inside/4.channel/parts.medium.jpg" />
+											</a>
+										</div>
+										<div class="part-image" data-partsfor="#top-inside-right">
+											<a href="3.top/1.inside/5.right/parts.jpg">
+												<img style="width: 100%" src="3.top/1.inside/5.right/parts.medium.jpg" />
+											</a>
+										</div>
+										<div class="part-image" data-partsfor="#top-inside-left">
+											<a href="3.top/1.inside/6.left/parts.jpg">
+												<img style="width: 100%" src="3.top/1.inside/6.left/parts.medium.jpg" />
+											</a>
+										</div>
+										<div class="part-image" data-partsfor="#top-inside-face">
+											<a href="3.top/1.inside/7.face/parts.jpg">
+												<img style="width: 100%" src="3.top/1.inside/7.face/parts.medium.jpg" />
+											</a>
+										</div>
+										<div class="part-image" data-partsfor="#top-roof">
+											<a href="3.top/2.roof/parts.jpg">
+												<img style="width: 100%" src="3.top/2.roof/parts.medium.jpg" />
+											</a>
+										</div>
+										<div class="part-image" data-partsfor="#top-roof-front">
+											<a href="3.top/2.roof/1.front/parts.jpg">
+												<img style="width: 100%" src="3.top/2.roof/1.front/parts.medium.jpg" />
+											</a>
+										</div>
+										<div class="part-image" data-partsfor="#pendulum">
+											<a href="4.pendulum/parts.jpg">
+												<img style="width: 100%" src="4.pendulum/parts.medium.jpg" />
+											</a>
+										</div>
+										<div class="part-image" data-partsfor="#weight">
+											<a href="5.weight/parts.jpg">
+												<img style="width: 100%" src="5.weight/parts.medium.jpg" />
+											</a>
+										</div>
 						</div>
 					</div>
 				</div>

@@ -56,6 +56,28 @@ def horizontal_thumb(img, width):
 	target = Size((width, width / original.aspect_ratio))
 	return img.resize(target.size, Image.ANTIALIAS)
 
+class ScaledImage:
+	def __init__(self, large):
+		self.large = large
+		self.medium = large.parent / (large.stem + '.medium' + large.suffix)
+		self.thumbnail = large.parent / (large.stem + '.thumb' + large.suffix)
+
+		if not self.medium.exists():
+			self.make_medium()
+
+		if not self.thumbnail.exists():
+			self.make_thumbnail()
+
+
+	def make_thumbnail(self):
+		im = Image.open(self.large.open('rb'))
+		im = covering_thumbnail(im, (64, 64))
+		im.save(self.thumbnail.open('wb'), "JPEG")
+
+	def make_medium(self):
+		im = Image.open(self.large.open('rb'))
+		im = horizontal_thumb(im, 800)
+		im.save(self.medium.open('wb'), "JPEG")
 
 class Step:
 	def __init__(self, name, path):
@@ -74,7 +96,7 @@ class Step:
 
 		parts_image = self.path / 'parts.jpg'
 		if parts_image.exists():
-			self.parts_image = parts_image
+			self.parts_image = ScaledImage(parts_image)
 		else:
 			self.parts_image = None
 
@@ -84,20 +106,8 @@ class Step:
 class ImageStep(Step):
 	def __init__(self, name, path):
 		super().__init__(name, path)
-		self.large_image = self.path
-		self.thumbnail = self.path.parent / (self.path.stem + '.thumb' + self.path.suffix)
-		self.image = self.path.parent / (self.path.stem + '.medium' + self.path.suffix)
+		self.image = ScaledImage(self.path)
 		self.parts = {}
-
-		if not self.thumbnail.exists():
-			im = Image.open(self.path.open('rb'))
-			im = covering_thumbnail(im, (64, 64))
-			im.save(self.thumbnail.open('wb'), "JPEG")
-
-		if not self.image.exists():
-			im = Image.open(self.path.open('rb'))
-			im = horizontal_thumb(im, 800)
-			im.save(self.image.open('wb'), "JPEG")
 
 class CompoundStep(Step):
 	def __init__(self, name, path, substeps=None):

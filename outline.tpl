@@ -1,4 +1,3 @@
-% from pathlib import PurePosixPath
 % import re
 
 % id_stack = []
@@ -11,8 +10,8 @@
 	% end
 	% substeps = getattr(e, 'substeps', [])
 	<div class="media" id="{{ '-'.join(id_stack) }}">
-		% thumb_path = e.thumbnail.as_posix() if e.thumbnail else ''
-		% full_path = e.large_image.as_posix() if e.large_image else ''
+		% thumb_path = e.image.thumbnail.as_posix() if e.image else ''
+		% full_path = e.image.large.as_posix() if e.image else ''
 
 		% if substeps:
 			<a class="pull-left" {{! 'href="' + full_path + '"' if full_path else ''}}>
@@ -20,7 +19,7 @@
 			</a>
 		%else:
 			<a href="{{full_path}}">
-				<img src="{{ e.image.as_posix() }}" class="img-responsive"/>
+				<img src="{{ e.image.medium.as_posix() }}" class="img-responsive"/>
 			</a>
 		% end
 		<div class="media-body">
@@ -53,26 +52,26 @@
 	</li>
 	% id_stack.pop()
 % end
-% def render_parts(e):
-	% if not e.name:
-		% id_stack.append(str(e.number))
-	% else:
-		% id_stack.append(e.name)
-	% end
-
-	% substeps = getattr(e, 'substeps', [])
-	<div data-partsfor="#{{'-'.join(id_stack) }}">
-		% parts_table(e)
-	</div>
-
-	% for s in substeps:
-		% render_parts(s)
-	% end
-
-	% id_stack.pop()
-% end
 
 <%
+
+def flat_iter(e):
+	if not e.name:
+		id_stack.append(str(e.number))
+	else:
+		id_stack.append(e.name)
+	end
+
+	yield '-'.join(id_stack), e
+
+	substeps = getattr(e, 'substeps', [])
+	for s in substeps:
+		yield from flat_iter(s)
+	end
+
+	id_stack.pop()
+end
+
 def iter_order(d, keys):
 	for k in keys:
 		if k in d:
@@ -173,15 +172,15 @@ rod_ids.update({
 		</p>
 	</div>
 
-	<!-- <section class="panel panel-default parts-panel">
-		<div class="panel-body" style="white-space: nowrap">
-			% if e.parts_image:
-				<div class="row" style="margin-bottom: -15px; margin-top: 15px;">
-					<img style="width: 100%" src="{{ e.parts_image.as_posix() }}" />
-				</div>
-			% end
-		</div>
-	</section> -->
+% #	<!-- <section class="panel panel-default parts-panel">
+% #		<div class="panel-body" style="white-space: nowrap">
+% #			% if e.parts_image:
+% #				<div class="row" style="margin-bottom: -15px; margin-top: 15px;">
+% #					<img style="width: 100%" src="{{ e.parts_image.as_posix() }}" />
+% #				</div>
+% #			% end
+% #		</div>
+% #	</section> -->
 % end
 
 
@@ -206,11 +205,14 @@ rod_ids.update({
 
 		$(function() {
 			$(window).scrollspy({target: ".the-sidebar", offset: 75 }).on('focused.bs.scrollspy', function(e) {
-				var matching = $('.part-lists > div').removeClass('active').filter(function() {
+				var matching = $('.part-lists > div, .part-images > div').removeClass('active').filter(function() {
 					return $(this).data('partsfor') == e.href;
 				});
 				console.log(matching, e.href);
 				matching.addClass('active');
+				if ('replaceState' in history) {
+					history.replaceState('', '', e.href);
+				}
 			});
 
 
@@ -315,8 +317,14 @@ rod_ids.update({
 			.part-lists .part-list {
 				display: none;
 			}
-			.part-lists .active .part-list {
-				display: block;
+			.part-images {
+				position: absolute;
+				bottom: 0;
+				left: 0;
+				right: 0;
+			}
+			.part-images .part-image {
+				display: none;
 			}
 
 			@media (min-width:992px) {
@@ -332,6 +340,12 @@ rod_ids.update({
 					position: fixed;
 					top: 20px;
 					bottom: 20px;
+				}
+				.the-sidebar.affix .part-images .part-image.active {
+					display: block;
+				}
+				.the-sidebar.affix .part-lists .active .part-list {
+					display: block;
 				}
 
 				.the-sidebar.affix-bottom {
@@ -384,7 +398,7 @@ rod_ids.update({
 			}
 
 			.jumbotron.main {
-				background-image: url({{ elem.substeps[-1].image.as_posix() }});
+				background-image: url({{ elem.substeps[-1].image.large.as_posix() }});
 				background-position: top;
 				background-size: cover;
 				height: 100%;
@@ -454,13 +468,25 @@ rod_ids.update({
 							</div>
 							<div class="col-lg-4 col-md-6 part-lists">
 								% for s in elem.substeps:
-									% render_parts(s)
+									% for i, e in flat_iter(s):
+										<div data-partsfor="#{{i}}">
+											% parts_table(e)
+										</div>
+									% end
 								% end
 							</div>
 						</div>
 						<div class="part-images">
 							% for s in elem.substeps:
-								% pass
+								% for i, e in flat_iter(s):
+									% if e.parts_image:
+										<div class="part-image" data-partsfor="#{{i}}">
+											<a href="{{ e.parts_image.large.as_posix() }}">
+												<img style="width: 100%" src="{{ e.parts_image.medium.as_posix() }}" />
+											</a>
+										</div>
+									% end
+								% end
 							% end
 						</div>
 					</div>
