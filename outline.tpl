@@ -399,6 +399,9 @@ rod_ids.update({
 				              1px -1px 1px black,
 				             -1px -1px 1px black;
 			}
+			.all-parts {
+				margin-bottom: 0;
+			}
 			.all-parts .part-list {
 				text-align: left;
 			}
@@ -431,6 +434,7 @@ rod_ids.update({
 				<h1>{{sum(x for y in elem.parts.values() for x in y.values())}} pieces</h1>
 			</div>
 		</div>
+		<img src="parts.jpg" style="width: 100%; display: block; margin-bottoM: 30px"/>
 		<div class="container">
 			<div class="row">
 				<div class="col-md-9">
