@@ -1,7 +1,7 @@
 % import re
-
+%
 % id_stack = []
-
+%
 % def render(e):
 	% if not e.name:
 		% id_stack.append(str(e.number))
@@ -32,7 +32,7 @@
 	</div>
 	% id_stack.pop()
 % end
-
+%
 % def render_nav(e):
 	% if not e.name:
 		% id_stack.append(str(e.number))
@@ -52,7 +52,7 @@
 	</li>
 	% id_stack.pop()
 % end
-
+%
 <%
 
 def flat_iter(e):
@@ -182,8 +182,8 @@ rod_ids.update({
 % #		</div>
 % #	</section> -->
 % end
-
-
+%
+%
 <!doctype html>
 <html>
 	<head>
@@ -194,6 +194,16 @@ rod_ids.update({
 
 		<link href="http://netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css" rel="stylesheet">
 		<script src="http://netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
+		<script>
+		(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+		(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+		m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+		})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+		ga('create', 'UA-24953524-3', 'eric-wieser.github.io');
+		ga('send', 'pageview');
+		</script>
+
 		<script>
 		ScrollSpy = $.fn.scrollspy.Constructor;
 
