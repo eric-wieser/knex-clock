@@ -185,7 +185,7 @@ rod_ids.update({
 %
 %
 <!doctype html>
-<html>
+<html prefix="og: http://ogp.me/ns#">
 	<head>
 		<meta charset="utf-8">
 		<meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -194,6 +194,11 @@ rod_ids.update({
 
 		<link href="http://netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css" rel="stylesheet">
 		<script src="http://netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
+
+		<meta property="og:title" content="Knex Grandfather Clock" />
+		<meta property="og:url" content="http://eric-wieser.github.io/knex-clock" />
+		<meta property="og:image" content="http://eric-wieser.github.io/knex-clock/{{ elem.substeps[-1].image.large.as_posix() }}" />
+
 		<script>
 		(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
 		(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
